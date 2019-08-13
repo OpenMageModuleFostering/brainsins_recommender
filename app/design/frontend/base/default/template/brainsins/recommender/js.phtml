@@ -192,42 +192,45 @@
 
         <?php if ($_bs_ajax_tracking):?>
 
-        var bdata_controller_url = "<?php echo $_url?>";
-        bdata_controller_url += "rnd/" + new Date().getTime() + "/";
-        //bdata_controller_url += "bdata/" + encodeURIComponent(JSON.stringify(BrainSINSData));
-        bdata_controller_url = bdata_controller_url.replace("https:", "").replace("http:", "");
+            <?php if ($_bs_custom_script):?>
+            var bs_custom_script = true;
+            <?php endif;?>
 
-        new Ajax.Request(bdata_controller_url, {
-            method: "get",
-            onSuccess: function (transport) {
-                var newBdata = transport.responseJSON;
-                if (newBdata) {
-                    BrainSINSData.login = newBdata.login;
-                    BrainSINSData.userNewsletter = newBdata.userNewsletter;
-                    BrainSINSData.userEmail = newBdata.userEmail;
-                    BrainSINSData.logout = newBdata.logout;
-                    BrainSINSData.trackingMode = "ajax";
-                    if (typeof showBsInfo == "function") {
-                        setTimeout(function () {
-                            showBsInfo();
-                        }, 1000)
+            var bdata_controller_url = "<?php echo $_url?>";
+            bdata_controller_url += "rnd/" + new Date().getTime() + "/";
+            //bdata_controller_url += "bdata/" + encodeURIComponent(JSON.stringify(BrainSINSData));
+            bdata_controller_url = bdata_controller_url.replace("https:", "").replace("http:", "");
+
+            new Ajax.Request(bdata_controller_url, {
+                method: "get",
+                onSuccess: function (transport) {
+                    var newBdata = transport.responseJSON;
+                    if (newBdata) {
+                        BrainSINSData.login = newBdata.login;
+                        BrainSINSData.userNewsletter = newBdata.userNewsletter;
+                        BrainSINSData.userEmail = newBdata.userEmail;
+                        BrainSINSData.logout = newBdata.logout;
+                        BrainSINSData.trackingMode = "ajax";
+                        if (typeof showBsInfo == "function") {
+                            setTimeout(function () {
+                                showBsInfo();
+                            }, 1000)
+                        }
                     }
+
+                    var domain = "." + window.location.hostname;
+                    bsUnsetCookie("brainsins_login", domain);
+                    bsUnsetCookie("brainsins_news", domain);
+                    bsUnsetCookie("brainsins_register", domain);
+                    bsUnsetCookie("brainsins_logout", domain);
+
+                    loadBrainSINSScript('<?php echo $_script_path ?>');
+                    <?php if ($_bs_custom_script):?>
+                        loadBrainSINSScript('<?php echo $_custom_script_path ?>');
+                    <?php endif;?>
+
                 }
-
-                var domain = "." + window.location.hostname;
-                bsUnsetCookie("brainsins_login", domain);
-                bsUnsetCookie("brainsins_news", domain);
-                bsUnsetCookie("brainsins_register", domain);
-                bsUnsetCookie("brainsins_logout", domain);
-
-                loadBrainSINSScript('<?php echo $_script_path ?>');
-                <?php if ($_bs_custom_script):?>
-                var bs_custom_script = true;
-                loadBrainSINSScript('<?php echo $_custom_script_path ?>');
-                <?php endif;?>
-
-            }
-        });
+            });
         <?php endif;?>
     </script>
     <!-- BrainSINS Code Ends -->

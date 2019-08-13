@@ -101,13 +101,13 @@
         };
 
 
-        <?php if (!$_bs_ajax_tracking):?>
+        <?php if (!$_bs_ajax_tracking){ ?>
         loadBrainSINSScript('<?php echo $_script_path ?>');
-        <?php if ($_bs_custom_script):?>
-        var bs_custom_script = true;
-        loadBrainSINSScript('<?php echo $_custom_script_path;?>');
-        <?php endif;?>
-        <?php endif;?>
+            <?php if ($_bs_custom_script){?>
+                var bs_custom_script = true;
+                loadBrainSINSScript('<?php echo $_custom_script_path;?>');
+            <?php }?>
+        <?php }?>
 
     </script>
     <!-- BrainSINS Code Ends -->
