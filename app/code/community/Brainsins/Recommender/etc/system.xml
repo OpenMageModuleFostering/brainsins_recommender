@@ -13,442 +13,488 @@
 	<http://www.gnu.org/licenses/>. * * Please do not hesitate to contact us 
 	at info@brainsins.com -->
 <config>
-	<tabs>
-		<brainsins_recommender_tab translate="label"
-			module="brainsins_recommender">
-			<label>BrainSINS</label>
-			<sort_order>1000</sort_order>
-			<class>tab-brainsins-extensions</class>
-		</brainsins_recommender_tab>
-	</tabs>
-	<sections>
-		<brainsins_recommender_options
-			translate="label" module="brainsins_recommender">
-			<label>Configuration</label>
-			<tab>brainsins_recommender_tab</tab>
-			<frontend_type>text</frontend_type>
-			<sort_order>100</sort_order>
-			<show_in_default>1</show_in_default>
-			<show_in_website>1</show_in_website>
-			<show_in_store>1</show_in_store>
-			<groups>
-				<help translate="label" module="brainsins_recommender">
-					<frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_help
-					</frontend_model>
-					<help_link>http://developers.brainsins.com/plugins/magento.html
-					</help_link>
-					<sort_order>0</sort_order>
-					<show_in_default>1</show_in_default>
-					<show_in_website>1</show_in_website>
-					<show_in_store>1</show_in_store>
-				</help>
-				<brainsins_recommender_general
-					translate="label comment" module="brainsins_recommender">
-					<label>General</label>
-					<comment><![CDATA[ <button type="button" class="scalable scalable go" onclick="window.open('http://www.brainsins.com')" style="display:none;"><span><span><span>I am not a BrainSINS user yet</span></span></span></button>]]></comment>
-					<frontend_type>text</frontend_type>
-					<sort_order>0</sort_order>
-					<show_in_default>1</show_in_default>
-					<show_in_website>1</show_in_website>
-					<show_in_store>1</show_in_store>
-					<fields>
-						<enabled translate="label comment">
-							<label>Enabled</label>
-							<comment>Enable or disable the extension.</comment>
-							<frontend_type>select</frontend_type>
-							<sort_order>10</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-						</enabled>
-						<bs_key translate="label comment">
-							<label>BS-KEY</label>
-							<comment>BrainSINS KEY format: BS-0123456789-1</comment>
-							<frontend_type>text</frontend_type>
-							<validate>required-entry validate-bskey-format</validate>
-							<sort_order>20</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
-								<enabled>1</enabled>
-							</depends>
-						</bs_key>
-						<email_tracking translate="label comment">
-							<label>Customer email tracking</label>
-							<comment>Needed for cart abandonment service.</comment>
-							<frontend_type>select</frontend_type>
-							<source_model>brainsins_recommender/adminhtml_system_config_source_emailtracking
-							</source_model>
-							<sort_order>30</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
-								<enabled>1</enabled>
-							</depends>
-						</email_tracking>
-					</fields>
-				</brainsins_recommender_general>
-				<brainsins_recommender_recommenders
-					translate="label comment" module="brainsins_recommender">
-					<label>Recommenders</label>
-					<comment></comment>
-					<frontend_type>text</frontend_type>
-					<sort_order>20</sort_order>
-					<show_in_default>1</show_in_default>
-					<show_in_website>1</show_in_website>
-					<show_in_store>1</show_in_store>
-					<fields>
+    <tabs>
+        <brainsins_recommender_tab translate="label"
+                                   module="brainsins_recommender">
+            <label>BrainSINS</label>
+            <sort_order>1000</sort_order>
+            <class>tab-brainsins-extensions</class>
+        </brainsins_recommender_tab>
+    </tabs>
+    <sections>
+        <brainsins_recommender_options
+                translate="label" module="brainsins_recommender">
+            <label>Configuration</label>
+            <tab>brainsins_recommender_tab</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>100</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <help translate="label" module="brainsins_recommender">
+                    <frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_help
+                    </frontend_model>
+                    <help_link>http://developers.brainsins.com/plugins/magento.html
+                    </help_link>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </help>
+                <brainsins_recommender_general
+                        translate="label comment" module="brainsins_recommender">
+                    <label>General</label>
+                    <comment>
+                        <![CDATA[ <button type="button" class="scalable scalable go" onclick="window.open('http://www.brainsins.com')" style="display:none;"><span><span><span>I am not a BrainSINS user yet</span></span></span></button>]]></comment>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>0</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label comment">
+                            <label>Enabled</label>
+                            <comment>Enable or disable the extension.</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </enabled>
+                        <bs_key translate="label comment">
+                            <label>BS-KEY</label>
+                            <comment>BrainSINS KEY format: BS-0123456789-1</comment>
+                            <frontend_type>text</frontend_type>
+                            <validate>required-entry validate-bskey-format</validate>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </bs_key>
+                        <email_tracking translate="label comment">
+                            <label>Customer email tracking</label>
+                            <comment>Needed for cart abandonment service.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>brainsins_recommender/adminhtml_system_config_source_emailtracking
+                            </source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <depends>
+                                <enabled>1</enabled>
+                            </depends>
+                        </email_tracking>
+                        <base_currency translate="label comment">
+                            <label>Base Currency</label>
+                            <comment>Select option</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>brainsins_recommender/adminhtml_system_config_source_currencies
+                            </source_model>
+                        </base_currency>
+                    </fields>
+                </brainsins_recommender_general>
+                <brainsins_recommender_recommenders
+                        translate="label comment" module="brainsins_recommender">
+                    <label>Recommenders</label>
+                    <comment></comment>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
                         <brainsins_recommender_recommenders_link>
-                            <label>Check available recommenders </label>
+                            <label>Check available recommenders</label>
                             <help_link>https://analytics.brainsins.com/optimization/recommenderslist
                             </help_link>
                             <comment></comment>
                             <frontend_type>button</frontend_type>
-                            <frontend_model>brainsins_recommender/adminhtml_system_config_source_recommenders_show</frontend_model>
+                            <frontend_model>brainsins_recommender/adminhtml_system_config_source_recommenders_show
+                            </frontend_model>
                             <sort_order>5</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </brainsins_recommender_recommenders_link>
-						<brainsins_recommender_recommenders_home
-							type="group" tranlate="label comment">
-							<label>Home page recommenders</label>
-							<comment></comment>
-							<frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_expanded
-							</frontend_model>
-							<frontend_type>text</frontend_type>
-							<sort_order>10</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<fields>
-								<recommenders_home tranlate="label comment">
-									<label>Enabled recommenders</label>
-									<comment>Recommenders
-										to enable at home page.<![CDATA[<br />]]>Custom
-										pos overrides the recommender position.
-									</comment>
-									<frontend_model>brainsins_recommender/adminhtml_system_config_source_recommenders_home
-									</frontend_model>
-									<backend_model>brainsins_recommender/adminhtml_system_config_backend_serialized
-									</backend_model>
-									<sort_order>10</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</recommenders_home>
-							</fields>
-						</brainsins_recommender_recommenders_home>
-						<brainsins_recommender_recommenders_product
-							type="group" tranlate="label comment">
-							<label>Product page recommenders</label>
-							<comment></comment>
-							<frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_expanded
-							</frontend_model>
-							<frontend_type>text</frontend_type>
-							<sort_order>20</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<fields>
-								<recommenders_product tranlate="label comment">
-									<label>Enabled recommenders</label>
-									<comment>Recommenders
-										to enable at product page.<![CDATA[<br />]]>Custom
-										pos overrides the recommender position.
-									</comment>
-									<frontend_model>brainsins_recommender/adminhtml_system_config_source_recommenders_product
-									</frontend_model>
-									<backend_model>brainsins_recommender/adminhtml_system_config_backend_serialized
-									</backend_model>
-									<sort_order>10</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</recommenders_product>
-							</fields>
-						</brainsins_recommender_recommenders_product>
-						<brainsins_recommender_recommenders_category
-							type="group" tranlate="label comment">
-							<label>Category page recommenders</label>
-							<comment></comment>
-							<frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_expanded
-							</frontend_model>
-							<frontend_type>text</frontend_type>
-							<sort_order>25</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<fields>
-								<recommenders_category tranlate="label comment">
-									<label>Enabled recommenders</label>
-									<comment>Recommenders
-										to enable at category page.<![CDATA[<br />]]>Custom
-										pos overrides the recommender position.
-									</comment>
-									<frontend_model>brainsins_recommender/adminhtml_system_config_source_recommenders_category
-									</frontend_model>
-									<backend_model>brainsins_recommender/adminhtml_system_config_backend_serialized
-									</backend_model>
-									<sort_order>10</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</recommenders_category>
-							</fields>
-						</brainsins_recommender_recommenders_category>
-						<brainsins_recommender_recommenders_cart
-							type="group" tranlate="label comment">
-							<label>Cart page recommenders</label>
-							<comment></comment>
-							<frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_expanded
-							</frontend_model>
-							<frontend_type>text</frontend_type>
-							<sort_order>30</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<fields>
-								<recommenders_cart tranlate="label comment">
-									<label>Enabled recommenders</label>
-									<comment>Recommenders
-										to enable at cart page.<![CDATA[<br />]]>Custom
-										pos overrides the recommender position.
-									</comment>
-									<frontend_model>brainsins_recommender/adminhtml_system_config_source_recommenders_cart
-									</frontend_model>
-									<backend_model>brainsins_recommender/adminhtml_system_config_backend_serialized
-									</backend_model>
-									<sort_order>10</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</recommenders_cart>
-							</fields>
-						</brainsins_recommender_recommenders_cart>
-						<brainsins_recommender_recommenders_checkout
-							type="group" tranlate="label comment">
-							<label>Thank you page recommenders</label>
-							<comment></comment>
-							<frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_expanded
-							</frontend_model>
-							<frontend_type>text</frontend_type>
-							<sort_order>40</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<fields>
-								<recommenders_checkout tranlate="label comment">
-									<label>Enabled recommenders</label>
-									<comment>Recommenders
-										to enable at thank you page.<![CDATA[<br />]]>Custom
-										pos overrides the recommender position.
-									</comment>
-									<frontend_model>brainsins_recommender/adminhtml_system_config_source_recommenders_checkout
-									</frontend_model>
-									<backend_model>brainsins_recommender/adminhtml_system_config_backend_serialized
-									</backend_model>
-									<sort_order>10</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</recommenders_checkout>
-							</fields>
-						</brainsins_recommender_recommenders_checkout>
-					</fields>
-				</brainsins_recommender_recommenders>
-				<brainsins_recommender_feed translate="label comment"
-					module="brainsins_recommender">
-					<label>Feeds</label>
-					<comment></comment>
-					<frontend_type>text</frontend_type>
-					<sort_order>30</sort_order>
-					<show_in_default>1</show_in_default>
-					<show_in_website>1</show_in_website>
-					<show_in_store>1</show_in_store>
-					<fields>
-						<product_feed type="group" tranlate="label comment">
-							<label>Products feed</label>
-							<comment></comment>
-							<frontend_type>text</frontend_type>
-							<sort_order>40</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<fields>
-								<include_oos_products translate="label comment">
-									<label>Include out of stock products</label>
-									<comment></comment>
-									<frontend_type>select</frontend_type>
-									<source_model>adminhtml/system_config_source_yesno
-									</source_model>
-									<sort_order>10</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</include_oos_products>
-								<tax_included translate="label comment">
-									<label>Prices with taxes included</label>
-									<comment></comment>
-									<frontend_type>select</frontend_type>
-									<source_model>adminhtml/system_config_source_yesno
-									</source_model>
-									<sort_order>20</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</tax_included>
-								<special_price translate="label comment">
-									<label>Special price instead normal</label>
-									<comment></comment>
-									<frontend_type>select</frontend_type>
-									<source_model>adminhtml/system_config_source_yesno
-									</source_model>
-									<sort_order>30</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</special_price>
-								<product_description_attribute
-									translate="label comment">
-									<label>Product description attribute</label>
-									<comment></comment>
-									<frontend_type>select</frontend_type>
-									<source_model>brainsins_recommender/adminhtml_system_config_source_attributes
-									</source_model>
-									<sort_order>40</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</product_description_attribute>
-								<product_image_resize_width
-									translate="label comment">
-									<label>Custom image width</label>
-									<comment>Leave blank for default width</comment>
-									<frontend_type>text</frontend_type>
-									<sort_order>44</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</product_image_resize_width>
-								<product_image_resize_height
-									translate="label comment">
-									<label>Custom image height</label>
-									<comment>Leave blank for default height</comment>
-									<frontend_type>text</frontend_type>
-									<sort_order>45</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</product_image_resize_height>
-							</fields>
-						</product_feed>
-					</fields>
-				</brainsins_recommender_feed>
-				<brainsins_recommender_autologin
-					translate="label comment" module="brainsins_recommender">
-					<label>Autologin Configuration</label>
-					<comment>Activate to allow autologin on email retargeting actions</comment>
-					<frontend_type>text</frontend_type>
-					<sort_order>50</sort_order>
-					<show_in_default>1</show_in_default>
-					<show_in_website>1</show_in_website>
-					<show_in_store>1</show_in_store>
-					<fields>
-						<enabled translate="label comment">
-							<label>Enabled</label>
-							<comment>Enable or disable the autologin feature</comment>
-							<frontend_type>select</frontend_type>
-							<sort_order>10</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-						</enabled>
-						<secret translate="label comment">
-							<label>Autologin Secret KEY</label>
-							<comment>Secret autologin password. 
-							Place the same password here than in BrainSINS analytics tool email editor</comment>
-							<frontend_type>text</frontend_type>
-							<sort_order>20</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<depends>
-								<enabled>1</enabled>
-							</depends>
-						</secret>
-					</fields>
-				</brainsins_recommender_autologin>
-				<brainsins_recommender_advanced
-					translate="label comment" module="brainsins_recommender">
-					<label>Advanced Configuration</label>
-					<comment>Do not modify these values unless required by BrainSINS
-					</comment>
-					<frontend_type>text</frontend_type>
-					<sort_order>60</sort_order>
-					<show_in_default>1</show_in_default>
-					<show_in_website>1</show_in_website>
-					<show_in_store>1</show_in_store>
-					<fields>
-						<api_mode translate="label comment">
-							<label>Select BrainSINS API Mode</label>
-							<comment></comment>
-							<frontend_type>select</frontend_type>
-							<sort_order>10</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<source_model>brainsins_recommender/adminhtml_system_config_source_apimode</source_model>
-						</api_mode>
-						<ajax_tracking translate="label comment">
-							<label>use Ajax for tracking generation</label>
-							<comment>Default value is NO</comment>
-							<frontend_type>select</frontend_type>
-							<sort_order>11</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-						</ajax_tracking>
-						<custom_script translate="label comment">
-							<label>use custom tracking script</label>
-							<comment>Default value is NO</comment>
-							<frontend_type>select</frontend_type>
-							<sort_order>12</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>1</show_in_website>
-							<show_in_store>1</show_in_store>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-						</custom_script>
-					</fields>
-				</brainsins_recommender_advanced>
-			</groups>
-		</brainsins_recommender_options>
-		<brainsins_recommender_dashboard
-			translate="label" module="brainsins_recommender">
-			<label>Dashboard</label>
-			<tab>brainsins_recommender_tab</tab>
-			<frontend_type>text</frontend_type>
-			<sort_order>101</sort_order>
-			<show_in_default>1</show_in_default>
-			<show_in_website>1</show_in_website>
-			<show_in_store>1</show_in_store>
-			<groups>
-				<dashboard translate="label">
-					<label>BrainSINS Dashboard</label>
-					<frontend_type>text</frontend_type>
-					<frontend_model>brainsins_recommender/adminhtml_system_config_form_fieldset_dashboard_dashboard
-					</frontend_model>
-					<sort_order>1</sort_order>
-					<show_in_default>1</show_in_default>
-					<show_in_website>1</show_in_website>
-					<show_in_store>1</show_in_store>
-				</dashboard>
-			</groups>
-		</brainsins_recommender_dashboard>
-	</sections>
+                        <brainsins_recommender_recommenders_home
+                                type="group" tranlate="label comment">
+                            <label>Home page recommenders</label>
+                            <comment></comment>
+                            <frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_expanded
+                            </frontend_model>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <fields>
+                                <recommenders_home tranlate="label comment">
+                                    <label>Enabled recommenders</label>
+                                    <comment>Recommenders
+                                        to enable at home page.<![CDATA[<br />]]>Custom
+                                        pos overrides the recommender position.
+                                    </comment>
+                                    <frontend_model>
+                                        brainsins_recommender/adminhtml_system_config_source_recommenders_home
+                                    </frontend_model>
+                                    <backend_model>brainsins_recommender/adminhtml_system_config_backend_serialized
+                                    </backend_model>
+                                    <sort_order>10</sort_order>
+                                    <show_in_default>1</show_in_default>
+                                    <show_in_website>1</show_in_website>
+                                    <show_in_store>1</show_in_store>
+                                </recommenders_home>
+                            </fields>
+                        </brainsins_recommender_recommenders_home>
+                        <brainsins_recommender_recommenders_product
+                                type="group" tranlate="label comment">
+                            <label>Product page recommenders</label>
+                            <comment></comment>
+                            <frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_expanded
+                            </frontend_model>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <fields>
+                                <recommenders_product tranlate="label comment">
+                                    <label>Enabled recommenders</label>
+                                    <comment>Recommenders
+                                        to enable at product page.<![CDATA[<br />]]>Custom
+                                        pos overrides the recommender position.
+                                    </comment>
+                                    <frontend_model>
+                                        brainsins_recommender/adminhtml_system_config_source_recommenders_product
+                                    </frontend_model>
+                                    <backend_model>brainsins_recommender/adminhtml_system_config_backend_serialized
+                                    </backend_model>
+                                    <sort_order>10</sort_order>
+                                    <show_in_default>1</show_in_default>
+                                    <show_in_website>1</show_in_website>
+                                    <show_in_store>1</show_in_store>
+                                </recommenders_product>
+                            </fields>
+                        </brainsins_recommender_recommenders_product>
+                        <brainsins_recommender_recommenders_category
+                                type="group" tranlate="label comment">
+                            <label>Category page recommenders</label>
+                            <comment></comment>
+                            <frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_expanded
+                            </frontend_model>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>25</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <fields>
+                                <recommenders_category tranlate="label comment">
+                                    <label>Enabled recommenders</label>
+                                    <comment>Recommenders
+                                        to enable at category page.<![CDATA[<br />]]>Custom
+                                        pos overrides the recommender position.
+                                    </comment>
+                                    <frontend_model>
+                                        brainsins_recommender/adminhtml_system_config_source_recommenders_category
+                                    </frontend_model>
+                                    <backend_model>brainsins_recommender/adminhtml_system_config_backend_serialized
+                                    </backend_model>
+                                    <sort_order>10</sort_order>
+                                    <show_in_default>1</show_in_default>
+                                    <show_in_website>1</show_in_website>
+                                    <show_in_store>1</show_in_store>
+                                </recommenders_category>
+                            </fields>
+                        </brainsins_recommender_recommenders_category>
+                        <brainsins_recommender_recommenders_cart
+                                type="group" tranlate="label comment">
+                            <label>Cart page recommenders</label>
+                            <comment></comment>
+                            <frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_expanded
+                            </frontend_model>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <fields>
+                                <recommenders_cart tranlate="label comment">
+                                    <label>Enabled recommenders</label>
+                                    <comment>Recommenders
+                                        to enable at cart page.<![CDATA[<br />]]>Custom
+                                        pos overrides the recommender position.
+                                    </comment>
+                                    <frontend_model>
+                                        brainsins_recommender/adminhtml_system_config_source_recommenders_cart
+                                    </frontend_model>
+                                    <backend_model>brainsins_recommender/adminhtml_system_config_backend_serialized
+                                    </backend_model>
+                                    <sort_order>10</sort_order>
+                                    <show_in_default>1</show_in_default>
+                                    <show_in_website>1</show_in_website>
+                                    <show_in_store>1</show_in_store>
+                                </recommenders_cart>
+                            </fields>
+                        </brainsins_recommender_recommenders_cart>
+                        <brainsins_recommender_recommenders_checkout
+                                type="group" tranlate="label comment">
+                            <label>Thank you page recommenders</label>
+                            <comment></comment>
+                            <frontend_model>brainsins_recommender/adminhtml_system_config_fieldset_expanded
+                            </frontend_model>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <fields>
+                                <recommenders_checkout tranlate="label comment">
+                                    <label>Enabled recommenders</label>
+                                    <comment>Recommenders
+                                        to enable at thank you page.<![CDATA[<br />]]>Custom
+                                        pos overrides the recommender position.
+                                    </comment>
+                                    <frontend_model>
+                                        brainsins_recommender/adminhtml_system_config_source_recommenders_checkout
+                                    </frontend_model>
+                                    <backend_model>brainsins_recommender/adminhtml_system_config_backend_serialized
+                                    </backend_model>
+                                    <sort_order>10</sort_order>
+                                    <show_in_default>1</show_in_default>
+                                    <show_in_website>1</show_in_website>
+                                    <show_in_store>1</show_in_store>
+                                </recommenders_checkout>
+                            </fields>
+                        </brainsins_recommender_recommenders_checkout>
+                    </fields>
+                </brainsins_recommender_recommenders>
+                <brainsins_recommender_feed translate="label comment"
+                                            module="brainsins_recommender">
+                    <label>Feeds</label>
+                    <comment></comment>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>30</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <include_oos_products translate="label comment">
+                            <label>Include out of stock products</label>
+                            <comment></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno
+                            </source_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </include_oos_products>
+                        <tax_included translate="label comment">
+                            <label>Display prices include taxes</label>
+                            <comment></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno
+                            </source_model>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </tax_included>
+                        <special_price translate="label comment">
+                            <label>Display special price instead normal</label>
+                            <comment></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno
+                            </source_model>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </special_price>
+                        <product_description_attribute
+                                translate="label comment">
+                            <label>Product description attribute</label>
+                            <comment></comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>brainsins_recommender/adminhtml_system_config_source_attributes
+                            </source_model>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_description_attribute>
+                        <product_image_resize_width
+                                translate="label comment">
+                            <label>Custom image width</label>
+                            <comment>Leave blank for default width</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>44</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_image_resize_width>
+                        <product_image_resize_height
+                                translate="label comment">
+                            <label>Custom image height</label>
+                            <comment>Leave blank for default height</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>45</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_image_resize_height>
+                    </fields>
+                </brainsins_recommender_feed>
+                <brainsins_recommender_autologin
+                        translate="label comment" module="brainsins_recommender">
+                    <label>Autologin Configuration</label>
+                    <comment>Activate to allow autologin on email retargeting actions</comment>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>50</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <enabled translate="label comment">
+                            <label>Enabled</label>
+                            <comment>Enable or disable the autologin feature</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </enabled>
+                    </fields>
+                </brainsins_recommender_autologin>
+                <brainsins_recommender_advanced
+                        translate="label comment" module="brainsins_recommender">
+                    <label>Advanced Configuration</label>
+                    <comment>Do not modify these values unless required by BrainSINS
+                    </comment>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>60</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <product_id_field translate="label comment">
+                            <label>Product Field as Id</label>
+                            <comment>default is entity_id</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </product_id_field>
+                        <category_id_field translate="label comment">
+                            <label>Category Field as Id</label>
+                            <comment>default is entity_id</comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>6</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </category_id_field>
+                        <ajax_tracking translate="label comment">
+                            <label>use Ajax for tracking generation</label>
+                            <comment>Default value is NO</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </ajax_tracking>
+                        <custom_script translate="label comment">
+                            <label>use custom tracking script</label>
+                            <comment>Default value is NO</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </custom_script>
+                        <configurable_tracking translate="label comment">
+                            <label>Configurable product's tracking</label>
+                            <comment>Select option</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>30</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>
+                                brainsins_recommender/adminhtml_system_config_source_configurableproducttracking
+                            </source_model>
+                        </configurable_tracking>
+                        <tracking_tax translate="label comment">
+                            <label>Include tax in tracking prices</label>
+                            <comment>Select option</comment>
+                            <frontend_type>select</frontend_type>
+                            <sort_order>40</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        </tracking_tax>
+                        <tracking_amount translate="label comment">
+                            <label>Value for purchases total amount</label>
+                            <frontend_type>select</frontend_type>
+                            <comment>Value to use as total amount for purchases
+                            </comment>
+                            <source_model>brainsins_recommender/adminhtml_system_config_source_totalamounttrackingoptions</source_model>
+                            <sort_order>50</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </tracking_amount>
+                        <secret translate="label comment">
+                            <label>BrainSINS Secret KEY</label>
+                            <comment>Secret brainsins password.
+                                Place your provided secret password here
+                            </comment>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>60</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </secret>
+                    </fields>
+                </brainsins_recommender_advanced>
+            </groups>
+        </brainsins_recommender_options>
+        <brainsins_recommender_dashboard
+                translate="label" module="brainsins_recommender">
+            <label>Dashboard</label>
+            <tab>brainsins_recommender_tab</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>101</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <dashboard translate="label">
+                    <label>BrainSINS Dashboard</label>
+                    <frontend_type>text</frontend_type>
+                    <frontend_model>brainsins_recommender/adminhtml_system_config_form_fieldset_dashboard_dashboard
+                    </frontend_model>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                </dashboard>
+            </groups>
+        </brainsins_recommender_dashboard>
+    </sections>
 </config>

@@ -15,7 +15,7 @@
 <config>
     <modules>
         <Brainsins_Recommender>
-            <version>2.0.4</version>
+            <version>2.1.1</version>
         </Brainsins_Recommender>
     </modules>
     <global>
@@ -59,6 +59,15 @@
                     </brainsins_recommender>
                 </observers>
             </sales_order_invoice_save_after>
+            <order_cancel_after>
+                <observers>
+                    <brainsins_recommender>
+                        <type>model</type>
+                        <class>brainsins_recommender/observer</class>
+                        <method>onOrderCancel</method>
+                    </brainsins_recommender>
+                </observers>
+            </order_cancel_after>
         </events>
     </global>
     <frontend>
@@ -249,22 +258,16 @@
                 <email_tracking>1</email_tracking>
             </brainsins_recommender_general>
             <brainsins_recommender_feed>
-                <cron_enabled>1</cron_enabled>
-                <cron_time>02,00,00</cron_time>
+                <tax_included>1</tax_included>
+                <special_price>1</special_price>
             </brainsins_recommender_feed>
             <brainsins_recommender_advanced>
                 <ajax_tracking>0</ajax_tracking>
                 <custom_script>0</custom_script>
+                <product_id_field>entity_id</product_id_field>
+                <category_id_field>entity_id</category_id_field>
+                <tracking_tax>1</tracking_tax>
             </brainsins_recommender_advanced>
         </brainsins_recommender_options>
     </default>
-    <crontab>
-        <jobs>
-            <brainsins_recommender_feeds_cron>
-                <run>
-                    <model>brainsins_recommender/cron::generateOfflineFeeds</model>
-                </run>
-            </brainsins_recommender_feeds_cron>
-        </jobs>
-    </crontab>
 </config>

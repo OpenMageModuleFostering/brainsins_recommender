@@ -28,8 +28,7 @@ class Brainsins_Recommender_TrackingController extends Mage_Core_Controller_Fron
 	{
 		try {
 				
-			$bdata = $this->getRequest()->getParam('bdata');
-			if (!$bdata || $bdata == "") {
+			/*if (!$bdata || $bdata == "") {
 				$this->getResponse()->setHeader('Content-Type', 'application/json')->setBody("{}");
 				return;
 			}
@@ -39,7 +38,8 @@ class Brainsins_Recommender_TrackingController extends Mage_Core_Controller_Fron
 				$this->getResponse()->setHeader('Content-Type', 'application/json')->setBody("{}");
 				return;
 			}
-			$bdata = $this->_completeBdata($bdata);
+			*/
+			$bdata = $this->_completeBdata(Array());
 			$response = json_encode($bdata);
 
 		} catch (Exception $e) {

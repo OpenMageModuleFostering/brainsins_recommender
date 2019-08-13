@@ -1,0 +1,116 @@
+<?php $_enabled = Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()); ?>
+<?php if ($_enabled): ?>
+    <?php
+
+    $_bskey = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_general/bs_key', Mage::app()->getStore()->getStoreId());
+    $_bs_ajax_tracking = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_advanced/ajax_tracking', Mage::app()->getStore()->getStoreId());
+    $_script_path = '"/brainsins.js"';
+    $_bs_custom_script = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_advanced/custom_script', Mage::app()->getStore()->getStoreId());
+    $_custom_script_path = "/$_bskey/$_bskey.js";
+
+    ?>
+
+    <!-- BrainSINS Code Starts -->
+    <script type='text/javascript'>
+
+        function loadBrainSINSScript(path) {
+            var bs = document.createElement('script');
+            bs.type = 'text/javascript';
+            bs.async = true;
+            bs.src = (document.location.protocol == 'https:' ? 'https://' : 'http://' ) + 'd2xkqxdy6ewr93.cloudfront.net' + path;
+            var head = document.getElementsByTagName('head')[0];
+            head.appendChild(bs);
+        }
+
+        function bsTrackProductCallback() {
+            var cookies = BrainSINS.Cookies;
+            var constants = BrainSINS.Constants;
+            var url = cookies.get(constants.urlNext);
+            self.location = url;
+            return false;
+        }
+        ;
+
+        function bsTrackProductClicked(productId, idRecommendation, idPrevPage, url) {
+            var cookies = BrainSINS.Cookies;
+            var constants = BrainSINS.Constants;
+            cookies.set(constants.urlNext, url, constants.daysInCookie);
+            cookies.set(constants.idRecommendation, idRecommendation,
+                constants.daysInCookie);
+            cookies.set(constants.idPrevPage, idPrevPage, constants.daysInCookie);
+            BrainSINSTracker.trackProductview(productId, "bsTrackProductCallback");
+            return false;
+        }
+        ;
+
+        function bsGetCookie(name) {
+            var value = "; " + document.cookie;
+            var parts = value.split("; " + name + "=");
+            if (parts.length == 2)
+                return parts.pop().split(";").shift();
+            return "";
+        }
+
+        function bsSetCookie(propertyName, value, domain) {
+            document.cookie = propertyName + "=" + encodeURI(value) + ";path=/"
+            + ";max-age=31536000" + (domain != null ? ";domain=" + domain : "");
+        }
+
+        function bsUnsetCookie(propertyName, domain) {
+            document.cookie = propertyName + "='';path=/"
+            + ";max-age=0" + (domain != null ? ";domain=" + domain : "");
+        }
+
+
+        function requestBrainSINSRecommendations(storeUrl, recommenderId, template, div, maxResults, productId, userId, filterCategories, filterLevel, callback, debug) {
+
+            if (productId == null) productId = BrainSINSData.productId;
+
+            if (userId == null) userId = bsGetCookie("bsCoId");
+
+            var url = storeUrl + "/brainsins/recommendation/recommendations";
+            url += "?recommenderId=" + recommenderId;
+            url += "&template=" + template;
+            url += productId == null ? "" : "&productId=" + productId;
+            url += userId == null ? "" : "&userId=" + userId;
+            url += maxResults == null ? "" : "&maxResults=" + maxResults;
+            url += filterCategories == null ? "" : "&filterCategories=" + filterCategories;
+            url += filterLevel == null ? "" : "&filterLevel=" + filterLevel;
+
+            url += "&rnd=" + new Date().getTime();
+            //brainsins/smartecommerce/test.phtml
+            if (debug) {
+                console.log(url);
+            }
+            new Ajax.Request(url,
+                {
+                    method: "get",
+                    onSuccess: function (transport) {
+                        document.getElementById(div).innerHTML = transport.responseText;
+                        if (typeof callback == "function") {
+                            callback();
+                        }
+                    }
+                }
+            );
+
+        }
+
+        var brainsins_token = "<?php echo $_bskey ?>";
+        var brainsins_api_mode = "B";
+        var BrainSINSData = {
+            "version" : "magento-<?php echo Mage::helper('brainsins_recommender')->getExtensionVersion() ?>"
+        };
+
+
+        <?php if (!$_bs_ajax_tracking):?>
+        loadBrainSINSScript('/brainsins.js');
+        <?php if ($_bs_custom_script):?>
+        var bs_custom_script = true;
+        loadBrainSINSScript('<?php echo $_bs_custom_script_path ?>');
+        <?php endif;?>
+        <?php endif;?>
+
+    </script>
+    <!-- BrainSINS Code Ends -->
+<?php endif; ?>

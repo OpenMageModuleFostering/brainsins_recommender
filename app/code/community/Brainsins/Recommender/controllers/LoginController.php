@@ -28,7 +28,7 @@ class Brainsins_Recommender_LoginController extends Mage_Core_Controller_Front_A
 
 		$bsEnabled = Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId());
 		$autologinEnabled = Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_autologin/enabled', Mage::app()->getStore()->getStoreId());
-		$autologinSecret = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_autologin/secret', Mage::app()->getStore()->getStoreId());
+		$autologinSecret = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_advanced/secret', Mage::app()->getStore()->getStoreId());
 
 		$email = $this->getRequest()->getParam('email');
 		$token = $this->getRequest()->getParam('token');

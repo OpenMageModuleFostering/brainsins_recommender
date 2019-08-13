@@ -22,13 +22,22 @@
  *  Please do not hesitate to contact us at info@brainsins.com
 -->
 <layout version="0.1.0">
-  <default>
-    <reference name="before_body_end">
-      <block type="core/template" name="brainsins_js" after="-">
-        <action method="setTemplate" ifconfig="brainsins_recommender_options/brainsins_recommender_general/enabled" after="-">
-          <template>brainsins/recommender/js.phtml</template>
-        </action>
-      </block>
-    </reference>
-  </default>
+    <default>
+        <reference name="head">
+            <block type="core/template" name="brainsins_js" after="-">
+                <action method="setTemplate"
+                        ifconfig="brainsins_recommender_options/brainsins_recommender_general/enabled" after="-">
+                    <template>brainsins/recommender/header.phtml</template>
+                </action>
+            </block>
+        </reference>
+        <reference name="before_body_end">
+            <block type="core/template" name="brainsins_js" after="-">
+                <action method="setTemplate"
+                        ifconfig="brainsins_recommender_options/brainsins_recommender_general/enabled" after="-">
+                    <template>brainsins/recommender/js.phtml</template>
+                </action>
+            </block>
+        </reference>
+    </default>
 </layout>

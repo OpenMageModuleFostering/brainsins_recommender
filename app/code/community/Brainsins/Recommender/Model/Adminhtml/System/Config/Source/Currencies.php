@@ -22,15 +22,37 @@
  *  Please do not hesitate to contact us at info@brainsins.com
 */
 
-class Brainsins_Recommender_Model_Adminhtml_System_Config_Source_Emailtracking
+class Brainsins_Recommender_Model_Adminhtml_System_Config_Source_Currencies
 {
 	public function toOptionArray()
 	{
-		return array(
-				array('value' => '', 'label'=>Mage::helper('brainsins_recommender')->__('-- Select --')),
-				array('value' => 0, 'label'=>Mage::helper('brainsins_recommender')->__('None')),
-				array('value' => 1, 'label'=>Mage::helper('brainsins_recommender')->__('Subscribed to Newsletter')),
-				array('value' => 2, 'label'=>Mage::helper('brainsins_recommender')->__('All'))
-		);
+        $currencies = Array();
+        $result = Array();
+
+        $default = Array();
+        $default["value"] = "";
+        $default["label"] = "use store's base currency";
+        $result[] = $default;
+
+        $stores = Mage::app()->getStore()->getCollection();
+
+        foreach ($stores as $store) {
+
+            $currencies[] = Array();
+            $codes = $store->getAvailableCurrencyCodes(true);
+            foreach ($codes as $code) {
+                if (!in_array($code, $currencies)) {
+                    $currencies[] = $code;
+                    $codeResult = Array();
+                    $codeResult['value'] = $code;
+                    $codeResult['label'] = $code;
+                    $result[] = $codeResult;
+                }
+            }
+        }
+
+
+
+		return $result;
 	}
 }

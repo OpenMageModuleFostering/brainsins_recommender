@@ -22,15 +22,13 @@
  *  Please do not hesitate to contact us at info@brainsins.com
 */
 
-class Brainsins_Recommender_Model_Adminhtml_System_Config_Source_Emailtracking
+class Brainsins_Recommender_Model_Adminhtml_System_Config_Source_Totalamounttrackingoptions
 {
 	public function toOptionArray()
 	{
 		return array(
-				array('value' => '', 'label'=>Mage::helper('brainsins_recommender')->__('-- Select --')),
-				array('value' => 0, 'label'=>Mage::helper('brainsins_recommender')->__('None')),
-				array('value' => 1, 'label'=>Mage::helper('brainsins_recommender')->__('Subscribed to Newsletter')),
-				array('value' => 2, 'label'=>Mage::helper('brainsins_recommender')->__('All'))
+				array('value' => 0, 'label'=>Mage::helper('brainsins_recommender')->__('Order Grand Total')),
+				array('value' => 1, 'label'=>Mage::helper('brainsins_recommender')->__('Shopping Cart Total'))
 		);
 	}
 }

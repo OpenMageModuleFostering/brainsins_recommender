@@ -154,6 +154,15 @@ class Brainsins_Recommender_Model_Observer extends Mage_Core_Model_Abstract
 		}
 	}
 
+    public function onOrderCancel($observer) {
+        try {
+            if(!Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()) || $this->_isApiRequest())
+                return;
+            Mage::helper('brainsins_recommender')->onOrderCancel($observer->getEvent()->getOrder());
+        } catch (Exception $e) {
+        }
+    }
+
 	protected function _isApiRequest()
 	{
 		return Mage::app()->getRequest()->getModuleName() === 'api';
