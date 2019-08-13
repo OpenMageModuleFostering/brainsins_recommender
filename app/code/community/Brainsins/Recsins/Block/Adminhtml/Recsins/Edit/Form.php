@@ -450,7 +450,7 @@ class Brainsins_Recsins_Block_Adminhtml_Recsins_Edit_Form extends Mage_Adminhtml
 			$currSymbPos->setId($currency . "_symb_pos_options");
 			$currSymbPos->setValues($currSymbPosOptions);
 			
-			$currencyDelimiter = new Varien_Data_Form_Element_Text(array('name' => $currency .'_delim', "label" => $helper->__("Currency Delimiter")));
+			$currencyDelimiter = new Varien_Data_Form_Element_Text(array('name' => $currency .'_delim', "label" => $helper->__("Decimal Delimiter")));
 			
 			$currencyOptions[$currency] = array();
 			$currencyOptions[$currency]['header'] = $currencyHeader;

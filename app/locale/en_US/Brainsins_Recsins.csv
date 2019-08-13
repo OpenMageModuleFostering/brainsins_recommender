@@ -49,4 +49,14 @@
 "Tax Prices", "Tax Prices"
 "Display Prices are equal to Catalog Prices", "Display Prices are equal to Catalog Prices"
 "Display Prices include taxes and Catalog Prices do not include taxes", "Display Prices include taxes and Catalog Prices do not include taxes"
-"Display Prices do not include taxes and Catalog Prices include taxes", "Display Prices do not include taxes and Catalog Prices include taxes"
+"Display Prices do not include taxes and Catalog Prices include taxes", "Display Prices do not include taxes and Catalog Prices include taxes
+"Currency Display Options", "Currency Display Options"
+"Currency Symbol", "Currency Symbol"
+"Left", "Left"
+"Right", "Right"
+"Decimal Delimiter", "Decimal Delimiter"
+"Custom style script (HTTP)", "Custom style script (HTTP)"
+"Custom style script (HTTPS)", "Custom style script (HTTPS)"
+"Use high detail in recommendation requests", "Use high detail in recommendation requests"
+"Use ajax for recommendation requests", "Use ajax for recommendation requests"
+
