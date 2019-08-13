@@ -27,7 +27,7 @@
     function bsIsCheckoutPage()
     {
         return Mage::app()->getRequest()->getControllerName() . '/' . Mage::app()->getRequest()->getActionName() == 'onepage/index' ||
-        Mage::app()->getRequest()->getControllerName() . '/' . Mage::app()->getRequest()->getActionName() == 'multishipping/addresses';
+        Mage::app()->getRequest()->getControllerName() . '/' . Mage::app()->getRequest()->getActionName() == 'multishipping/addresses' || Mage::app()->getRequest()->getRouteName() == 'onestepcheckout';
     }
 
     function bsIsThankYouPage()
@@ -105,6 +105,7 @@
 
     function bsBuildBdata($doLogin)
     {
+        $checkoutSession = Mage::getSingleton('checkout/session');
         $bdata = Array();
         $bdata["language"] = Mage::app()->getStore()->getCode();
         $bdata["currency"] = Mage::app()->getStore()->getCurrentCurrencyCode();
@@ -132,11 +133,10 @@
             $bdata["pageType"] = "cart";
             $bdata["cart"] = bsCartInfo(false);
             //track misc data for order
-            $session = Mage::getSingleton('checkout/session');
-            if($session->getData("brainsins_qhash")){
-                $bdata["cartMisc"] =array(
-                    "quoteId"=>$session->getQuoteId(),
-                    "brainsins_qhash"=>$session->getData("brainsins_qhash")
+            if($checkoutSession->getData("brainsins_qhash")){
+                $bdata["cart"]["misc"] =array(
+                    "quoteId"=>$checkoutSession->getQuoteId(),
+                    "brainsins_qhash"=>$checkoutSession->getData("brainsins_qhash")
                     );
             }           
         }
@@ -172,7 +172,27 @@
         if ($doLogin) {
             $bdata = bsLoginInfo($bdata);
         }
-
+        if(!Mage::getSingleton('customer/session')->isLoggedIn()){
+            //not logged in
+            //error_log("guest");
+            Mage::getSingleton('customer/session')->unsetData('brainsins_userTrack_sent');
+        }else if(Mage::getSingleton('customer/session')->isLoggedIn() && Mage::getSingleton('customer/session')->getData('brainsins_userTrack_sent')===null){
+            // logged in
+            $userData=Mage::helper('customer')->getCustomer()->getData();
+            $bdata["user"]["firstName"]=$userData["firstname"];
+            $bdata["user"]["lastName"]=$userData["lastname"];
+            $bdata["user"]["middleName"]=$userData["middlename"];
+            $bdata["user"]["group_id"]=$userData["group_id"];
+            //track misc data for user logged
+            if($checkoutSession->getData("brainsins_qhash")){
+                $bdata["user"]["bs_cart"]["misc"] =array(
+                    "quoteId"=>$checkoutSession->getQuoteId(),
+                    "brainsins_qhash"=>$checkoutSession->getData("brainsins_qhash")
+                    );
+            } 
+            //avoid sending the info multiple times, send it only once in session
+            Mage::getSingleton('customer/session')->setData('brainsins_userTrack_sent',1);
+        }
         return $bdata;
     }
 
@@ -199,11 +219,18 @@
 
         ?>
 
-        <?php if ($_bs_ajax_tracking):?>
+        <?php if ($_bs_custom_script){?>
+                var bs_custom_script = true;
+        <?php }?>
 
-            <?php if ($_bs_custom_script):?>
-            var bs_custom_script = true;
-            <?php endif;?>
+        <?php if (!$_bs_ajax_tracking){ ?>
+        loadBrainSINSScript('<?php echo $_script_path ?>');
+            <?php if ($_bs_custom_script){?>
+                loadBrainSINSScript('<?php echo $_custom_script_path;?>');
+            <?php }?>
+        <?php }?>
+
+        <?php if ($_bs_ajax_tracking):?>
 
             var bdata_controller_url = "<?php echo $_url?>";
             bdata_controller_url += "rnd/" + new Date().getTime() + "/";

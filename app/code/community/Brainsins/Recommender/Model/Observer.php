@@ -99,18 +99,19 @@ class Brainsins_Recommender_Model_Observer extends Mage_Core_Model_Abstract
 		//check and update brainsins_qhash
 		$quote=$observer->getEvent()->getQuote();
 		if($quote!==null){
+			$session = Mage::getSingleton('checkout/session');
 			$brainsins_qhash=$quote->getData('brainsins_qhash');
 	        if($brainsins_qhash ===null || $brainsins_qhash===""){
 	        	$brainsins_qhash=md5($quote->getId());
-	        	$session = Mage::getSingleton('checkout/session');
-		        $session->setData("brainsins_qhash",$brainsins_qhash);
 		        try{
 	        		$quote->setData('brainsins_qhash',$brainsins_qhash);
 		        	$quote->save();
 	        	}catch(Exception $e){
 	        		error_log("[BrainSINS]".$e);
 	        	}
-	        }   
+
+	        }
+	        $session->setData("brainsins_qhash",$brainsins_qhash);  
 		}
 
 		Mage::helper('brainsins_recommender')->updateCartInBrainsins(Mage::getSingleton('checkout/session')->getQuote(), true);

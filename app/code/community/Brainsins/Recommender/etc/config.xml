@@ -15,7 +15,7 @@
 <config>
     <modules>
         <Brainsins_Recommender>
-            <version>2.1.6</version>
+            <version>2.1.7.3</version>
         </Brainsins_Recommender>
     </modules>
     <global>

@@ -17,8 +17,8 @@
             bs.type = 'text/javascript';
             bs.async = true;
             bs.src = (document.location.protocol == 'https:' ? 'https://' : 'http://' ) + 'd2xkqxdy6ewr93.cloudfront.net' + path;
-            var head = document.getElementsByTagName('head')[0];
-            head.appendChild(bs);
+            var body = document.getElementsByTagName('body')[0];
+            body.appendChild(bs);
         }
 
         function bsTrackProductCallback() {
@@ -100,14 +100,6 @@
             "version" : "magento-<?php echo Mage::helper('brainsins_recommender')->getExtensionVersion() ?>"
         };
 
-
-        <?php if (!$_bs_ajax_tracking){ ?>
-        loadBrainSINSScript('<?php echo $_script_path ?>');
-            <?php if ($_bs_custom_script){?>
-                var bs_custom_script = true;
-                loadBrainSINSScript('<?php echo $_custom_script_path;?>');
-            <?php }?>
-        <?php }?>
 
     </script>
     <!-- BrainSINS Code Ends -->
