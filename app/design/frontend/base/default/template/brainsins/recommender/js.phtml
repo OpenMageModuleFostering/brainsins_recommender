@@ -20,7 +20,8 @@
 
     function bsIsCartPage()
     {
-        return Mage::app()->getRequest()->getControllerName() . '/' . Mage::app()->getRequest()->getActionName() == 'cart/index';
+        $path=Mage::app()->getRequest()->getControllerName() . '/' . Mage::app()->getRequest()->getActionName();
+        return $path == 'cart/index' || $path== 'checkout_cart/index';
     }
 
     function bsIsCheckoutPage()
@@ -130,6 +131,14 @@
             $pageType = "cart";
             $bdata["pageType"] = "cart";
             $bdata["cart"] = bsCartInfo(false);
+            //track misc data for order
+            $session = Mage::getSingleton('checkout/session');
+            if($session->getData("brainsins_qhash")){
+                $bdata["cartMisc"] =array(
+                    "quoteId"=>$session->getQuoteId(),
+                    "brainsins_qhash"=>$session->getData("brainsins_qhash")
+                    );
+            }           
         }
 
         if (bsIsCheckoutPage()) {

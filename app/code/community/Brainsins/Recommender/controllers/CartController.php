@@ -33,63 +33,31 @@ class Brainsins_Recommender_CartController extends Mage_Core_Controller_Front_Ac
 			return $this;
 		}
 		
-		if($this->getRequest()->getParam('p') && $this->getRequest()->getParam('q'))
+		if($this->getRequest()->getParam('brainsins_qhash'))
 		{
-            $cart = Mage::getSingleton('checkout/cart');
-			$products = explode(',', $this->getRequest()->getParam('p'));
-			$qties = explode(',', $this->getRequest()->getParam('q'));
-
-            foreach ($products as $key => $product)
-            {
-                try
-                {
-                    if(isset($qties[$key]) && intval($qties[$key]))
-                        $qty = (int)$qties[$key];
-                    else
-                        $qty = 1;
-        
-                    $productObj = new Mage_Catalog_Model_Product();
-                    $productObj->load($product);
-                    
-                    if(!$productObj->getId())
-                        continue;
-    
-                    if($productObj->getTypeId() == 'configurable' || $productObj->getTypeId() == 'grouped' || $productObj->getTypeId() == 'bundle')
-                    {
-                        $default = $this->_getDefaultProduct($productObj, $productObj->getTypeId());
-                        if($default)
-                        {
-                            unset($productObj);
-                            $productObj = new Mage_Catalog_Model_Product();
-                            $productObj->load($default);
-                            $product = $productObj->getId();
-                        }
-                        else
-                            continue;
-                     }
-    
-                    $existing_products = $cart->getItems();
-                    if($this->_checkIfProductExistsInCart($product, $existing_products))
-                        continue;
-                    
-                    $params = array(
-                        'product' => $product,
-                        'qty' => $qty,
-                    );
-                    
-                    $cart->addProduct($productObj, $params);
-                    unset($productObj);
-                }
-                catch(Exception $e)
-                {
-                    continue;
-                }
+            $brainsins_qhash=$this->getRequest()->getParam('brainsins_qhash');
+            $session = Mage::getSingleton('checkout/session');
+            try{   
+                //get carts info
+                $oldQuote=Mage::getModel('sales/quote')->load($brainsins_qhash,'brainsins_qhash');
+                $currentQuote=Mage::getModel('sales/quote')->load($session->getQuoteId());
+                if($currentQuote->getId()===null){
+                    //replace it with the old one
+                    $session->replaceQuote($oldQuote);
+                    //add quote info to BrainSINSData tracking, since a new quote has been created
+                    $newQuote=$session->getQuote();
+                    $session->setData("quoteId",$newQuote->getId());
+                    $session->setData("brainsins_qhash",$newQuote->brainsins_qhash);
+                }else{        
+                    //merge old cart with current cart
+                    $currentQuote->merge($oldQuote);
+                    $currentQuote->collectTotals()->save();
+                } 
+            }catch(Exception $e){
+                error_log("[BrainSINS]".$e);
             }
-            $cart->save();
-            Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
-
-			$this->_redirect('checkout/cart/', array('_query' => $this->getRequest()->getParams()));
 		}
+        $this->_redirect('checkout/cart/', array('_query' => $this->getRequest()->getParams()));
     }
     
     public function addAction($product, $qty) {

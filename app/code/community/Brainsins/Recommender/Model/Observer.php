@@ -26,6 +26,7 @@ class Brainsins_Recommender_Model_Observer extends Mage_Core_Model_Abstract
 {
 	public function updateCartEvent($observer)
 	{
+
 		if($observer->getEvent()->getControllerAction()->getFullActionName() == 'checkout_cart_add' ||
 			$observer->getEvent()->getControllerAction()->getFullActionName() == 'checkout_cart_delete' ||
 			$observer->getEvent()->getControllerAction()->getFullActionName() == 'sales_order_reorder')
@@ -35,8 +36,10 @@ class Brainsins_Recommender_Model_Observer extends Mage_Core_Model_Abstract
 		if($observer->getEvent()->getControllerAction()->getFullActionName() == 'checkout_cart_updatePost') //TO DO: Genera 2 llamadas en la actualización del carrito
 			Mage::dispatchEvent('checkout_update_cart_after', array());
         
-        if(Mage::app()->getRequest()->getRouteName().'/'.Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'brainsins/cart/create') //Desde controller
-            Mage::dispatchEvent('checkout_update_cart_after', array());
+        if(Mage::app()->getRequest()->getRouteName().'/'.Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'brainsins/cart/create'){
+        	Mage::dispatchEvent('checkout_update_cart_after', array());
+        }
+            
 		
 		return $this;
 	}
@@ -93,6 +96,23 @@ class Brainsins_Recommender_Model_Observer extends Mage_Core_Model_Abstract
 	{
 		if(!Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()) || $this->_isApiRequest())
 			return;
+		//check and update brainsins_qhash
+		$quote=$observer->getEvent()->getQuote();
+		if($quote!==null){
+			$brainsins_qhash=$quote->getData('brainsins_qhash');
+	        if($brainsins_qhash ===null || $brainsins_qhash===""){
+	        	$brainsins_qhash=md5($quote->getId());
+	        	$session = Mage::getSingleton('checkout/session');
+		        $session->setData("brainsins_qhash",$brainsins_qhash);
+		        try{
+	        		$quote->setData('brainsins_qhash',$brainsins_qhash);
+		        	$quote->save();
+	        	}catch(Exception $e){
+	        		error_log("[BrainSINS]".$e);
+	        	}
+	        }   
+		}
+
 		Mage::helper('brainsins_recommender')->updateCartInBrainsins(Mage::getSingleton('checkout/session')->getQuote(), true);
 	}
 

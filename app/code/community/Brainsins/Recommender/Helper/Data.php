@@ -557,91 +557,42 @@ class Brainsins_Recommender_Helper_Data extends Mage_Core_Helper_Abstract
 
         $ruta = "order/trackOrder.xml?";
         $url = self::getApiUrl() . $ruta . "token=" . Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_general/bs_key', Mage::app()->getStore()->getStoreId());
-
+        //build XML
         $cartXML = new DOMDocument('1.0', 'UTF-8');
         $cartXML->xmlStandalone = true;
-
+        //add roots
         $pRecsins = $cartXML->createElement('recsins');
         $pRecsins->setAttribute('version', '0.1');
         $cartXML->appendChild($pRecsins);
 
         $pOrders = $cartXML->createElement('orders');
-
         $pOrder = $cartXML->createElement('order');
+        //Add order associate attrs
         $pIdBuyer = $cartXML->createElement('idBuyer', $this->_getUser());
         $pOrder->appendChild($pIdBuyer);
 
-       // $pLanguage =
+        $checkoutSession = Mage::getSingleton('checkout/session');
+        $brainsins_qhash=$checkoutSession->getData("brainsins_qhash"); 
 
-        //$pCurrency = $cartXML->createElement('idCurrency', Mage::app()->getStore()->getCurrentCurrencyCode());
-        //$pOrder->appendChild($pCurrency);
+        $pCartMisc = $cartXML->createElement('cartMisc', json_encode(array("brainsins_qhash"=>$brainsins_qhash,"quoteId"=>$cartId)));   
+        $pOrder->appendChild($pCartMisc);
 
         $pTotal = $cartXML->createElement('totalAmount', $cartData["totalAmount"]);
         $pOrder->appendChild($pTotal);
 
         $pOrders->appendChild($pOrder);
-
         $pRecsins->appendChild($pOrders);
 
         $pProducts = $cartXML->createElement('products');
         $pOrder->appendChild($pProducts);
 
-
-        /*
-        if ($special)
-            $items = $cart->getAllVisibleItems();
-        else
-            $items = $cart->getItems();
-
-        $cartItems = Array();
-
-        foreach ($items as $item) {
-
-            $cartItem = Array();
-
-            $price = $item->getPriceInclTax();
-
-            if ($item->getParentItem()) {
-                $item = $item->getParentItem();
-            }
-
-            $id = $item->getProductId();
-
-            $qty = $item->getQty();
-
-            //get parent if exists -> ensure not single products that belong to configurable exist
-            $configurable_product_model = Mage::getModel('catalog/product_type_configurable');
-            $parentIdArray = $configurable_product_model->getParentIdsByChild($id);
-
-// 			Mage::log("-----");
-// 			Mage::log($item->getProductId());
-// 			Mage::log("type : " . $item->getProductType());
-// 			Mage::log($item->getProduct()->getName());
-// 			Mage::log("parent : " . ($item->getParentItem() ? $item->getParentItem()->getProductId() : "-"));
-// 			Mage::log("qty is " . $qty);
-// 			Mage::log("-----");
-
-            $cartItem["id"] = $id;
-            $cartItem["qty"] = $qty;
-            $cartItem["price"] = $price;
-
-            $cartItems[] = $cartItem;
-
-            //if (array_key_exists($id, $cartItems)) {
-            //	$cartItems[$id] = $cartItems[$id] + $qty;
-            //} else {
-            //	$cartItems[$id] = $qty;
-            //}
-        }
-
-        //Mage::log($cartItems);
-
-        */
-
         $cartItems = $cartData["products"];
 
         foreach ($cartItems as $cartItem) {
             $pProduct = $cartXML->createElement('product');
+
+            $pProductType = $cartXML->createElement('productType', "product");
+            $pProduct->appendChild($pProductType);
 
             $pIdProduct = $cartXML->createElement('idProduct', $cartItem["id"]);
             $pProduct->appendChild($pIdProduct);
@@ -669,7 +620,6 @@ class Brainsins_Recommender_Helper_Data extends Mage_Core_Helper_Abstract
 
 
         $lastTrackedCart = Mage::getSingleton('core/session')->getBrainsinsLastCartTracked();
-// 		Mage::log($cartId);
         if ($cartId == $lastTrackedCart) {
             return;
         } else {
@@ -677,9 +627,8 @@ class Brainsins_Recommender_Helper_Data extends Mage_Core_Helper_Abstract
         }
 
         $content = $cartXML->saveXML($cartXML->documentElement);
-        //Mage::log($content);
         $result = $this->_sendBrainsinsWS($url, $content);
-// 		Mage::log($result);
+        //error_log(var_export($content,TRUE));
         return $result;
     }
 
@@ -824,7 +773,6 @@ class Brainsins_Recommender_Helper_Data extends Mage_Core_Helper_Abstract
 
     protected function _sendBrainsinsWS($url, $content = "", $contentType = "application/xml", $post = true)
     {
-
         if (function_exists('curl_init')) {
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
