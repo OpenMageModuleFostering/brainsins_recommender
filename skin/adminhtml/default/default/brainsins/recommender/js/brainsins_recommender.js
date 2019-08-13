@@ -47,9 +47,9 @@ Event.observe(window, 'load', function() {
 		$('btnViewOnlineFeed').enable();
 	}
 //	}
-	if($('brainsins_recommender_options_product_feed_product_description_attribute').value == '')
+	if($('brainsins_recommender_options_brainsins_recommender_feed_product_description_attribute').value == '')
 	{
-		var options = $('brainsins_recommender_options_product_feed_product_description_attribute');
+		var options = $('brainsins_recommender_options_brainsins_recommender_feed_product_description_attribute');
 		var len = options.length;
 		for (var i = 0; i < len; i++) {
 			if(options[i].value == 'description')
@@ -57,7 +57,7 @@ Event.observe(window, 'load', function() {
 				options[i].selected = true;
 			}
 		}
-		$('brainsins_recommender_options_product_feed_product_description_attribute').value == 'description';
+		$('brainsins_recommender_options_brainsins_recommender_feed_product_description_attribute').value == 'description';
 	}
 });
 

@@ -4,10 +4,9 @@
 
     $_bskey = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_general/bs_key', Mage::app()->getStore()->getStoreId());
     $_bs_ajax_tracking = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_advanced/ajax_tracking', Mage::app()->getStore()->getStoreId());
-    $_script_path = '"/brainsins.js"';
+    $_script_path = '/brainsins.js';
     $_bs_custom_script = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_advanced/custom_script', Mage::app()->getStore()->getStoreId());
     $_custom_script_path = "/$_bskey/$_bskey.js";
-
     ?>
 
     <!-- BrainSINS Code Starts -->
@@ -96,18 +95,17 @@
 
         }
 
-        var brainsins_token = "<?php echo $_bskey ?>";
-        var brainsins_api_mode = "B";
-        var BrainSINSData = {
+        var brainsins_token = "<?php echo $_bskey ?>",
+        BrainSINSData = {
             "version" : "magento-<?php echo Mage::helper('brainsins_recommender')->getExtensionVersion() ?>"
         };
 
 
         <?php if (!$_bs_ajax_tracking):?>
-        loadBrainSINSScript('/brainsins.js');
+        loadBrainSINSScript('<?php echo $_script_path ?>');
         <?php if ($_bs_custom_script):?>
         var bs_custom_script = true;
-        loadBrainSINSScript('<?php echo $_bs_custom_script_path ?>');
+        loadBrainSINSScript('<?php echo $_custom_script_path;?>');
         <?php endif;?>
         <?php endif;?>
 

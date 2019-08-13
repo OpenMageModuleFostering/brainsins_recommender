@@ -220,10 +220,10 @@
                 bsUnsetCookie("brainsins_register", domain);
                 bsUnsetCookie("brainsins_logout", domain);
 
-                loadBrainSINSScript('/brainsins.js');
+                loadBrainSINSScript('<?php echo $_script_path ?>');
                 <?php if ($_bs_custom_script):?>
                 var bs_custom_script = true;
-                loadBrainSINSScript('<?php echo $_bs_custom_script_path ?>');
+                loadBrainSINSScript('<?php echo $_custom_script_path ?>');
                 <?php endif;?>
 
             }
