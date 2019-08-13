@@ -1,0 +1,43 @@
+<?php
+/* --- GET RECOMMENDATIONS --- */
+$recommendations = $this->getRecommendations();
+?>
+
+<?php if(count($recommendations)): ?>
+<div class="box-collateral box-up-sell">
+	<h2>
+	<?php echo $this->__('You may also be interested in the following product(s)') ?></h2>
+	<table class="products-grid" id="upsell-product-table">
+
+		<tr>
+		<?php for($_j=0; $_j < count($recommendations); $_j++):
+		$id = $recommendations[$_j];
+		$product = Mage::getModel("catalog/product");
+		$product->load($id);
+		?>
+			<td>
+				<!-- PLEASE NOTE THE USE OF THE ONCLICK ATTRIBUTE. IT MUST BE USED IN ALL ANCHORS/BUTTONS -->
+				<a onclick="<?php echo $this->getOnclick($id, $product->getProductUrl()) ?>" href="<?php echo $product->getProductUrl() ?>" title="<?php echo $this->htmlEscape($product->getName()) ?>" class="product-image">
+				<img
+				src="<?php echo $this->helper('catalog/image')->init($product, 'small_image')->resize(125) ?>"
+				width="125" height="125"
+				alt="<?php echo $this->htmlEscape($product->getName()) ?>" 
+				/>
+				</a>
+				<h3 class="product-name"><?php echo $id?></h3>
+				<h3 class="product-name">
+					<a onclick="<?php echo $this->getOnclick($id, $product->getProductUrl()) ?>" href="<?php echo $product->getProductUrl() ?>"
+						title="<?php echo $this->htmlEscape($product->getName()) ?>"><?php echo $this->htmlEscape($product->getName()) ?>
+					</a>
+				</h3>
+				
+                <?php echo $this->getPriceHtml($product, true, '-upsell') ?>
+                <p><button onclick="<?php echo $this->getOnclick($id, $this->getAddToCartUrl($product)) ?>" type="button" title="<?php echo $this->__('Add to Cart') ?>" class="button btn-cart"><span><span><?php echo $this->__('Add to Cart') ?></span></span></button></p>
+                
+            </td>
+        <?php endfor; ?>
+        </tr>
+	</table>
+	<script type="text/javascript">decorateTable('upsell-product-table')</script>
+</div>
+<?php endif ?>

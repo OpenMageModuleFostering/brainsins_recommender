@@ -27,7 +27,7 @@
 			<label>Configuration</label>
 			<tab>brainsins_recommender_tab</tab>
 			<frontend_type>text</frontend_type>
-			<sort_order>1</sort_order>
+			<sort_order>100</sort_order>
 			<show_in_default>1</show_in_default>
 			<show_in_website>1</show_in_website>
 			<show_in_store>1</show_in_store>
@@ -101,6 +101,18 @@
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
 					<fields>
+                        <brainsins_recommender_recommenders_link>
+                            <label>Check available recommenders </label>
+                            <help_link>https://analytics.brainsins.com/optimization/recommenderslist
+                            </help_link>
+                            <comment></comment>
+                            <frontend_type>button</frontend_type>
+                            <frontend_model>brainsins_recommender/adminhtml_system_config_source_recommenders_show</frontend_model>
+                            <sort_order>5</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </brainsins_recommender_recommenders_link>
 						<brainsins_recommender_recommenders_home
 							type="group" tranlate="label comment">
 							<label>Home page recommenders</label>
@@ -258,45 +270,6 @@
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
 					<fields>
-						<cron_enabled translate="label comment">
-							<label>Enable feeds auto generation</label>
-							<comment>Enable or disable the scheduled feed generation.
-							</comment>
-							<frontend_type>select</frontend_type>
-							<sort_order>10</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>0</show_in_website>
-							<show_in_store>0</show_in_store>
-							<source_model>adminhtml/system_config_source_yesno</source_model>
-						</cron_enabled>
-						<cron_time translate="label comment">
-							<label>Start Time</label>
-							<comment></comment>
-							<frontend_type>time</frontend_type>
-							<sort_order>20</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>0</show_in_website>
-							<show_in_store>0</show_in_store>
-							<depends>
-								<cron_enabled>1</cron_enabled>
-							</depends>
-						</cron_time>
-						<cron_frequency translate="label comment">
-							<label>Frequency</label>
-							<comment></comment>
-							<frontend_type>select</frontend_type>
-							<source_model>adminhtml/system_config_source_cron_frequency
-							</source_model>
-							<backend_model>brainsins_recommender/adminhtml_system_config_backend_cron
-							</backend_model>
-							<sort_order>30</sort_order>
-							<show_in_default>1</show_in_default>
-							<show_in_website>0</show_in_website>
-							<show_in_store>0</show_in_store>
-							<depends>
-								<cron_enabled>1</cron_enabled>
-							</depends>
-						</cron_frequency>
 						<product_feed type="group" tranlate="label comment">
 							<label>Products feed</label>
 							<comment></comment>
@@ -305,9 +278,6 @@
 							<show_in_default>1</show_in_default>
 							<show_in_website>1</show_in_website>
 							<show_in_store>1</show_in_store>
-							<depends>
-								<cron_enabled>1</cron_enabled>
-							</depends>
 							<fields>
 								<include_oos_products translate="label comment">
 									<label>Include out of stock products</label>
@@ -374,44 +344,52 @@
 									<show_in_website>1</show_in_website>
 									<show_in_store>1</show_in_store>
 								</product_image_resize_height>
-								<offline_feed translate="label comment">
-									<label>Offline feed</label>
-									<comment></comment>
-									<frontend_model>brainsins_recommender/adminhtml_system_config_source_feeds_productOffline
-									</frontend_model>
-									<sort_order>50</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</offline_feed>
-								<online_feed translate="label comment">
-									<label>Online feed</label>
-									<comment></comment>
-									<frontend_model>brainsins_recommender/adminhtml_system_config_source_feeds_productOnline
-									</frontend_model>
-									<sort_order>60</sort_order>
-									<show_in_default>1</show_in_default>
-									<show_in_website>1</show_in_website>
-									<show_in_store>1</show_in_store>
-								</online_feed>
 							</fields>
 						</product_feed>
-						<!-- <cronjob_expression tranlate="label comment"> <label>Programacin 
-							sincronizacin stock</label> <comment>Frecuencia de la sincronizacin del stock. 
-							Introducir expresin Cron (p.e. "0 * * * *" para cada hora en punto).</comment> 
-							<frontend_type>text</frontend_type> <backend_model>ecommbits_eral/adminhtml_system_config_backend_cron</backend_model> 
-							<sort_order>20</sort_order> <show_in_default>1</show_in_default> <show_in_website>1</show_in_website> 
-							<show_in_store>0</show_in_store> <depends> <cron_enabled>1</cron_enabled> 
-							</depends> </cronjob_expression> -->
 					</fields>
 				</brainsins_recommender_feed>
+				<brainsins_recommender_autologin
+					translate="label comment" module="brainsins_recommender">
+					<label>Autologin Configuration</label>
+					<comment>Activate to allow autologin on email retargeting actions</comment>
+					<frontend_type>text</frontend_type>
+					<sort_order>50</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<fields>
+						<enabled translate="label comment">
+							<label>Enabled</label>
+							<comment>Enable or disable the autologin feature</comment>
+							<frontend_type>select</frontend_type>
+							<sort_order>10</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+						</enabled>
+						<secret translate="label comment">
+							<label>Autologin Secret KEY</label>
+							<comment>Secret autologin password. 
+							Place the same password here than in BrainSINS analytics tool email editor</comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>20</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<depends>
+								<enabled>1</enabled>
+							</depends>
+						</secret>
+					</fields>
+				</brainsins_recommender_autologin>
 				<brainsins_recommender_advanced
 					translate="label comment" module="brainsins_recommender">
 					<label>Advanced Configuration</label>
 					<comment>Do not modify these values unless required by BrainSINS
 					</comment>
 					<frontend_type>text</frontend_type>
-					<sort_order>40</sort_order>
+					<sort_order>60</sort_order>
 					<show_in_default>1</show_in_default>
 					<show_in_website>1</show_in_website>
 					<show_in_store>1</show_in_store>
@@ -426,6 +404,26 @@
 							<show_in_store>1</show_in_store>
 							<source_model>brainsins_recommender/adminhtml_system_config_source_apimode</source_model>
 						</api_mode>
+						<ajax_tracking translate="label comment">
+							<label>use Ajax for tracking generation</label>
+							<comment>Default value is NO</comment>
+							<frontend_type>select</frontend_type>
+							<sort_order>11</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+						</ajax_tracking>
+						<custom_script translate="label comment">
+							<label>use custom tracking script</label>
+							<comment>Default value is NO</comment>
+							<frontend_type>select</frontend_type>
+							<sort_order>12</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>1</show_in_website>
+							<show_in_store>1</show_in_store>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+						</custom_script>
 					</fields>
 				</brainsins_recommender_advanced>
 			</groups>
@@ -435,7 +433,7 @@
 			<label>Dashboard</label>
 			<tab>brainsins_recommender_tab</tab>
 			<frontend_type>text</frontend_type>
-			<sort_order>2</sort_order>
+			<sort_order>101</sort_order>
 			<show_in_default>1</show_in_default>
 			<show_in_website>1</show_in_website>
 			<show_in_store>1</show_in_store>

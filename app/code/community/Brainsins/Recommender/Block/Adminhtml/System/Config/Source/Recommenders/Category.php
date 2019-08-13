@@ -53,11 +53,22 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ca
 	{
 		$html = '<li>';
 		$html .= '<div style="margin:5px 0 10px;">';
-		if($this->getElement()->getData('value/'.'recommender_name_c/'.$rowIndex) != '')
-			$html .= $this->_getRecommenderNamesHtmlSelect($rowIndex, $this->getElement()->getData('value/'.'recommender_name_c/'.$rowIndex));
-		else
-			$html .= $this->_getRecommenderNamesHtmlSelect($rowIndex, '');
-		$html .= '<div style="height: 2px;"></div>';
+
+//        if($this->getElement()->getData('value/'.'recommender_name_c/'.$rowIndex) != '')
+//			$html .= $this->_getRecommenderNamesHtmlSelect($rowIndex, $this->getElement()->getData('value/'.'recommender_name_c/'.$rowIndex));
+//		else
+//			$html .= $this->_getRecommenderNamesHtmlSelect($rowIndex, '');
+
+        if($this->getElement()->getData('value/'.'recommender_name_c/'.$rowIndex) != '')
+        {
+            $html .= $this->_getRecommenderIdInputBox($rowIndex, $this->getElement()->getData('value/'.'recommender_name_c/'.$rowIndex));
+        }
+        else
+        {
+            $html .= $this->_getRecommenderIdInputBox($rowIndex, '');
+        }
+
+        $html .= '<div style="height: 2px;"></div>';
 		if($this->_getValue('custom_div_c/'.$rowIndex) != '')
 			$class = 'custom-select-after-before-hide';
 		else
@@ -138,6 +149,17 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ca
 		}
 		return $this->_removeRowButtonHtml;
 	}
+
+    protected function _getRecommenderIdInputBox($rowIndex, $value) {
+        $name = $this->getElement()->getName().'[recommender_name_c][]';
+        $id = '[recommender_name_c]['.$rowIndex.']';
+
+        $html = "<div class='brainsins-recommenders-first-line'>";
+        $html .= '<label for="' . $name . '" class="brainsins-recommenders-first-line-first-item">Recommender Id: </label>';
+        $html .= '<input name="' . $name . '" id="' . $id . '" type="text" value="' . $value .'" class="brainsins-recommenders-first-line-second-item">';
+        $html .= "</div>";
+        return $html;
+    }
 
 	protected function _getRecommenderNamesHtmlSelect($rowIndex, $default_value = '')
 	{

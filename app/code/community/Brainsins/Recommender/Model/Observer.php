@@ -42,64 +42,52 @@ class Brainsins_Recommender_Model_Observer extends Mage_Core_Model_Abstract
 	}
 	public function insertBlock($observer)
     {
-		if(!Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()))
-			return;
+        if (!Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()))
+            return;
 
-		$_recommenders = array();
-		$_alias = $observer->getBlock()->getBlockAlias();
+        $_recommenders = array();
+        $_alias = $observer->getBlock()->getBlockAlias();
 
-		//HOME PAGE RECOMMENDERS
-		if(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'index/index')
-			$_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('home', Mage::app()->getStore()->getStoreId());
+        //HOME PAGE RECOMMENDERS
+        if (Mage::app()->getRequest()->getControllerName() . '/' . Mage::app()->getRequest()->getActionName() == 'index/index')
+            $_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('home', Mage::app()->getStore()->getStoreId());
 
-		//PRODUCT PAGE RECOMMENDERS
-		if(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'product/view')
-			$_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('product', Mage::app()->getStore()->getStoreId());
+        //PRODUCT PAGE RECOMMENDERS
+        if (Mage::app()->getRequest()->getControllerName() . '/' . Mage::app()->getRequest()->getActionName() == 'product/view')
+            $_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('product', Mage::app()->getStore()->getStoreId());
 
-		//CATEGORY PAGE RECOMMENDERS
-		if(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'category/view')
-			$_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('category', Mage::app()->getStore()->getStoreId());
-			
-		//CART PAGE RECOMMENDERS
-		if(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'cart/index')
-			$_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('cart', Mage::app()->getStore()->getStoreId());
+        //CATEGORY PAGE RECOMMENDERS
+        if (Mage::app()->getRequest()->getControllerName() . '/' . Mage::app()->getRequest()->getActionName() == 'category/view')
+            $_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('category', Mage::app()->getStore()->getStoreId());
 
-		//THANK YOU PAGE RECOMMENDERS
-		if(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'onepage/success')
-			$_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('checkout', Mage::app()->getStore()->getStoreId());
+        //CART PAGE RECOMMENDERS
+        if (Mage::app()->getRequest()->getControllerName() . '/' . Mage::app()->getRequest()->getActionName() == 'cart/index')
+            $_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('cart', Mage::app()->getStore()->getStoreId());
 
-		foreach ($_recommenders as $key => $_value)
-		{
-			if ($_alias == $_value[2] && $_value[2] != '')
-			{
-				$_before = '';
-				$_after = '';
-				$_recommender = $_value[0];
-				$_position = $_value[1];
-				$_block = $_value[2];
-				$_custom_div_position = $_value[3];
-				$_custom_div = $_value[4];
-				$_content = $observer->getTransport()->getHtml();
-				if($_position == 'before')
-				{
-					$_before = $this->_getBrainsinsRecommenderHtml($_recommender);
-					$observer->getTransport()->setHtml($_before.$_content);					
-				}
-				elseif($_position == 'after')
-				{
-					$_after = $this->_getBrainsinsRecommenderHtml($_recommender);
-					$observer->getTransport()->setHtml($_content.$_after);
-				}
-			}
-		}
+        //THANK YOU PAGE RECOMMENDERS
+        if (Mage::app()->getRequest()->getControllerName() . '/' . Mage::app()->getRequest()->getActionName() == 'onepage/success')
+            $_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('checkout', Mage::app()->getStore()->getStoreId());
+
+        foreach ($_recommenders as $key => $_value) {
+            if ($_alias == $_value[2] && $_value[2] != '') {
+                $_before = '';
+                $_after = '';
+                $_recommender = $_value[0];
+                $_position = $_value[1];
+                $_block = $_value[2];
+                $_custom_div_position = $_value[3];
+                $_custom_div = $_value[4];
+                $_content = $observer->getTransport()->getHtml();
+                if ($_position == 'before') {
+                    $_before = $this->_getBrainsinsRecommenderHtml($_recommender);
+                    $observer->getTransport()->setHtml($_before . $_content);
+                } elseif ($_position == 'after') {
+                    $_after = $this->_getBrainsinsRecommenderHtml($_recommender);
+                    $observer->getTransport()->setHtml($_content . $_after);
+                }
+            }
+        }
     }
-
-	public function onCartUpdate($observer)
-	{
-		if(!Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()) || $this->_isApiRequest())
-			return;
-		Mage::helper('brainsins_recommender')->updateCartInBrainsins($observer->getCart());
-	}
 	
 	public function updateCart($observer)
 	{
@@ -114,7 +102,7 @@ class Brainsins_Recommender_Model_Observer extends Mage_Core_Model_Abstract
             return;
         $customer = $observer->getCustomer();
         if (!$observer->getCustomer()->getOrigData()) {
-            Mage::getSingleton('core/cookie')->set('brainsins_register', $customer->getId(), time()+86400, '/');
+            Mage::getSingleton('core/cookie')->set('brainsins_register', $customer->getId(), time()+86400, '/', null, null, false);
         }
     }
 
@@ -123,7 +111,8 @@ class Brainsins_Recommender_Model_Observer extends Mage_Core_Model_Abstract
 		if(!Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()) || $this->_isApiRequest())
 			return;
 		$customer = $observer->getCustomer();
-		Mage::getSingleton('core/cookie')->set('brainsins_login', $customer->getId(), time()+86400, '/');
+		Mage::getSingleton('core/cookie')->set('brainsins_login', $customer->getId(), time()+86400, '/', null, null, false);
+		
 	}
 	
 	public function customerLogout($observer)
@@ -131,7 +120,7 @@ class Brainsins_Recommender_Model_Observer extends Mage_Core_Model_Abstract
 		if(!Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()) || $this->_isApiRequest())
 			return;
 		$customer = $observer->getCustomer();
-		Mage::getSingleton('core/cookie')->set('brainsins_logout', $customer->getId(), time()+86400, '/');
+		Mage::getSingleton('core/cookie')->set('brainsins_logout', $customer->getId(), time()+86400, '/', null, null, false);
 	}
 	
 	public function subscribedToNewsletter($observer)
@@ -143,8 +132,26 @@ class Brainsins_Recommender_Model_Observer extends Mage_Core_Model_Abstract
 		$statusChange = $subscriber->getIsStatusChanged();
 	    if ($statusChange)
 	    {
-	    	Mage::getSingleton('core/cookie')->set('brainsins_news', $subscriber->getCustomerId(), time()+86400, '/');
+	    	Mage::getSingleton('core/cookie')->set('brainsins_news', $subscriber->getCustomerId(), time()+86400, '/', null, null, false);
 	    }
+	}
+	
+	public function onEndCheckout($observer) {
+		try {		
+		if(!Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()) || $this->_isApiRequest())
+			return;
+		Mage::helper('brainsins_recommender')->onEndCheckout($observer->getEvent()->getPayment()->getOrder());
+		} catch (Exception $e) {
+		}
+	}
+	
+	public function onPayment($observer) {
+		try {
+			if(!Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()) || $this->_isApiRequest())
+				return;
+			Mage::helper('brainsins_recommender')->onPayment($observer->getEvent()->getInvoice()->getOrder());
+		} catch (Exception $e) {
+		}
 	}
 
 	protected function _isApiRequest()

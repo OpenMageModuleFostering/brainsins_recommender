@@ -1,5 +1,6 @@
-<?php
-/**
+<?xml version="1.0"?>
+
+<!--
  * BrainSINS' Magento Extension allows to integrate the BrainSINS
  * personalized product recommendations into a Magento Store.
  * Copyright (c) 2014 Social Gaming Platform S.R.L.
@@ -20,35 +21,13 @@
  *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  *
  *  Please do not hesitate to contact us at info@brainsins.com
-*/
+-->
 
-class Brainsins_Recommender_Model_Cron
-{	
-	public function generateOfflineFeeds($bskey)
-	{
-		try
-		{
-			$this->_productsFeed($bskey);
-			return true;
-		}
-		catch(Exception $e)
-		{
-			Mage::throwException(Mage::helper('brainsins_recommender')->__('ERROR GENERATING OFFLINE FEEDS'));
-			return false;
-		}
-	}
-
-	protected function _productsFeed($bskey)
-	{
-// 		$feed = Mage::helper('brainsins_recommender')->getProductsFeed($bskey);
-// 		$io = new Varien_Io_File();
-// 		$path = Mage::getBaseDir('media') . DS . 'brainsins_feeds' . DS;
-// 		$file = $path . DS . $bskey . '.xml';
-// 		$io->setAllowCreateFolders(true);
-// 		$io->open(array('path' => $path));
-// 		$io->streamOpen($file, 'w+');
-// 		$io->streamLock(true);
-// 		$io->streamWrite($feed);
-// 		$io->streamClose();
-	}
-}
+<config>
+    <modules>
+        <Brainsins_Recommender>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Brainsins_Recommender>
+    </modules>
+</config> 

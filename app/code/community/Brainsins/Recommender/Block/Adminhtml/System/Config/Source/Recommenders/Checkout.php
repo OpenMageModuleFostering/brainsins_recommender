@@ -53,13 +53,24 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ch
 	{
 		$html = '<li>';
 		$html .= '<div style="margin:5px 0 10px;">';
-		$html .= $this->_getRecommenderNamesHtmlSelect($rowIndex, $this->getElement()->getData('value/'.'recommender_name_check/'.$rowIndex));
-		$html .= '<div style="height: 2px;"></div>';
-		if($this->_getValue('custom_div_check/'.$rowIndex) != '')
+		//$html .= $this->_getRecommenderNamesHtmlSelect($rowIndex, $this->getElement()->getData('value/'.'recommender_name_check/'.$rowIndex));
+
+
+        if($this->getElement()->getData('value/'.'recommender_name_check/'.$rowIndex) != '')
+        {
+            $html .= $this->_getRecommenderIdInputBox($rowIndex, $this->getElement()->getData('value/'.'recommender_name_check/'.$rowIndex));
+        }
+        else
+        {
+            $html .= $this->_getRecommenderIdInputBox($rowIndex, '');
+        }
+
+        $html .= '<div style="height: 2px;"></div>';
+        if($this->_getValue('custom_div_check/'.$rowIndex) != '')
 			$class = 'custom-select-after-before-hide';
 		else
 			$class = 'custom-select-after-before';
-		$html .= $this->_getBeforeAfterHtmlSelect($rowIndex, $this->getElement()->getData('value/'.'recommender_after_before_check/'.$rowIndex), 'recommender_after_before_check', $class);
+        $html .= $this->_getBeforeAfterHtmlSelect($rowIndex, $this->getElement()->getData('value/'.'recommender_after_before_check/'.$rowIndex), 'recommender_after_before_check', $class);
 		$html .= $this->_getPositionsHtmlSelect($rowIndex, $this->getElement()->getData('value/'.'recommender_position_check/'.$rowIndex));
 		$html .= '<p class="custom-p">';
 		$html .= '<span class="custom-div"';
@@ -132,6 +143,17 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ch
 		}
 		return $this->_removeRowButtonHtml;
 	}
+
+    protected function _getRecommenderIdInputBox($rowIndex, $value) {
+        $name = $this->getElement()->getName().'[recommender_name_check][]';
+        $id = '[recommender_name_check]['.$rowIndex.']';
+
+        $html = "<div class='brainsins-recommenders-first-line'>";
+        $html .= '<label for="' . $name . '" class="brainsins-recommenders-first-line-first-item">Recommender Id: </label>';
+        $html .= '<input name="' . $name . '" id="' . $id . '" type="text" value="' . $value .'" class="brainsins-recommenders-first-line-second-item">';
+        $html .= "</div>";
+        return $html;
+    }
 
 	protected function _getRecommenderNamesHtmlSelect($rowIndex, $default_value = '')
 	{

@@ -88,8 +88,14 @@ class Brainsins_Recommender_CartController extends Mage_Core_Controller_Front_Ac
             $cart->save();
             Mage::getSingleton('checkout/session')->setCartWasUpdated(true);
 
-			$this->_redirect('checkout/cart/');
+			$this->_redirect('checkout/cart/', array('_query' => $this->getRequest()->getParams()));
 		}
+    }
+    
+    public function addAction($product, $qty) {
+		$params = $this->getRequest()->getParams();
+		$params['form_key'] = Mage::getSingleton('core/session')->getFormKey(); 
+    	$this->_redirect('checkout/cart/add', $params);
     }
 
     protected function _checkIfProductExistsInCart($id_product, $products)
@@ -148,4 +154,6 @@ class Brainsins_Recommender_CartController extends Mage_Core_Controller_Front_Ac
         }
         return false;
     }
+    
+    
 }

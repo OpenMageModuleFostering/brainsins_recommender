@@ -22,33 +22,23 @@
  *  Please do not hesitate to contact us at info@brainsins.com
 */
 
-class Brainsins_Recommender_Model_Cron
-{	
-	public function generateOfflineFeeds($bskey)
-	{
-		try
-		{
-			$this->_productsFeed($bskey);
-			return true;
-		}
-		catch(Exception $e)
-		{
-			Mage::throwException(Mage::helper('brainsins_recommender')->__('ERROR GENERATING OFFLINE FEEDS'));
-			return false;
-		}
-	}
+class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Show extends Mage_Adminhtml_Block_System_Config_Form_Field
+{
+    /**
+     * Return element html
+     *
+     * @param  Varien_Data_Form_Element_Abstract $element
+     * @return string
+     */
+    protected function _getElementHtml(Varien_Data_Form_Element_Abstract $element)
+    {
+        $button = $this->getLayout()->createBlock('adminhtml/widget_button')
+            ->setData(array(
+                'id'        => 'bs_recommender_list_button',
+                'label'     => $this->helper('adminhtml')->__('See available recommenders'),
+                'onclick'   => 'showRecommenderList()'
+            ));
 
-	protected function _productsFeed($bskey)
-	{
-// 		$feed = Mage::helper('brainsins_recommender')->getProductsFeed($bskey);
-// 		$io = new Varien_Io_File();
-// 		$path = Mage::getBaseDir('media') . DS . 'brainsins_feeds' . DS;
-// 		$file = $path . DS . $bskey . '.xml';
-// 		$io->setAllowCreateFolders(true);
-// 		$io->open(array('path' => $path));
-// 		$io->streamOpen($file, 'w+');
-// 		$io->streamLock(true);
-// 		$io->streamWrite($feed);
-// 		$io->streamClose();
-	}
+        return $button->toHtml();
+    }
 }

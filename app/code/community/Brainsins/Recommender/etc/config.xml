@@ -1,30 +1,21 @@
 <?xml version="1.0"?>
-<!--
- * BrainSINS' Magento Extension allows to integrate the BrainSINS
- * personalized product recommendations into a Magento Store.
- * Copyright (c) 2014 Social Gaming Platform S.R.L.
- *
- * This file is part of BrainSINS' Magento Extension.
- *
- *  BrainSINS' Magento Extension is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License
- *  as published by the Free Software Foundation, either version 3 of the
- *  License, or (at your option) any later version.
- *
- *  Foobar is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
- *
- *  Please do not hesitate to contact us at info@brainsins.com
--->
+<!-- * BrainSINS' Magento Extension allows to integrate the BrainSINS * personalized 
+	product recommendations into a Magento Store. * Copyright (c) 2014 Social 
+	Gaming Platform S.R.L. * * This file is part of BrainSINS' Magento Extension. 
+	* * BrainSINS' Magento Extension is free software: you can redistribute it 
+	* and/or modify it under the terms of the GNU General Public License * as 
+	published by the Free Software Foundation, either version 3 of the * License, 
+	or (at your option) any later version. * * Foobar is distributed in the hope 
+	that it will be useful, * but WITHOUT ANY WARRANTY; without even the implied 
+	warranty of * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the 
+	* GNU General Public License for more details. * * You should have received 
+	a copy of the GNU General Public License * along with Foobar. If not, see 
+	<http://www.gnu.org/licenses/>. * * Please do not hesitate to contact us 
+	at info@brainsins.com -->
 <config>
     <modules>
         <Brainsins_Recommender>
-            <version>2.0.0</version>
+            <version>2.0.4</version>
         </Brainsins_Recommender>
     </modules>
     <global>
@@ -58,6 +49,17 @@
                 </connection>
             </brainsins_recommender_read>
         </resources>
+        <events>
+            <sales_order_invoice_save_after>
+                <observers>
+                    <brainsins_recommender>
+                        <type>model</type>
+                        <class>brainsins_recommender/observer</class>
+                        <method>onPayment</method>
+                    </brainsins_recommender>
+                </observers>
+            </sales_order_invoice_save_after>
+        </events>
     </global>
     <frontend>
         <routers>
@@ -86,78 +88,94 @@
                     </brainsins_recommender>
                 </observers>
             </core_block_abstract_to_html_after>
-			<customer_save_after>
-				<observers>
-					<brainsins_recommender>
-						<type>model</type>
-						<class>brainsins_recommender/observer</class>
-						<method>customerRegister</method>
-					</brainsins_recommender>
-				</observers>
-			</customer_save_after>
-			<customer_login>
-				<observers>
-					<brainsins_recommender>
-						<type>model</type>
-						<class>brainsins_recommender/observer</class>
-						<method>customerLogin</method>
-					</brainsins_recommender>
-				</observers>
-			</customer_login>
-			<customer_logout>
-				<observers>
-					<brainsins_recommender>
-						<type>model</type>
-						<class>brainsins_recommender/observer</class>
-						<method>customerLogout</method>
-					</brainsins_recommender>
-				</observers>
-			</customer_logout>
-			<newsletter_subscriber_save_commit_after>
-	            <observers>
-	                <brainsins_recommender>
-	                    <class>brainsins_recommender/observer</class>
-	                    <method>subscribedToNewsletter</method>
-	                </brainsins_recommender>
-	            </observers>
-        	</newsletter_subscriber_save_commit_after>
-			<checkout_cart_update_items_after>
-	            <observers>
-	                <brainsins_recommender>
-	                    <class>brainsins_recommender/observer</class>
-	                    <method>onCartUpdate</method>
-	                </brainsins_recommender>
-	            </observers>
-        	</checkout_cart_update_items_after>
-			<controller_action_postdispatch>
-				<observers>
-					<brainsins_recommender>
-						<type>singleton</type>
-						<class>brainsins_recommender/observer</class>
-						<method>updateCartEvent</method>
-					</brainsins_recommender>
-				</observers>
-			</controller_action_postdispatch>
-			<checkout_update_cart_after>
-				<observers>
-					<brainsins_recommender>
-						<type>singleton</type>
-						<class>brainsins_recommender/observer</class>
-						<method>updateCart</method>
-					</brainsins_recommender>
-				</observers>
-			</checkout_update_cart_after>
-			<!--
-			<checkout_cart_save_after>
-				<observers>
-					<brainsins_recommender>
-						<type>singleton</type>
-						<class>brainsins_recommender/observer</class>
-						<method>updateCart</method>
-					</brainsins_recommender>
-				</observers>
-			</checkout_cart_save_after>
-			-->
+            <customer_save_after>
+                <observers>
+                    <brainsins_recommender>
+                        <type>model</type>
+                        <class>brainsins_recommender/observer</class>
+                        <method>customerRegister</method>
+                    </brainsins_recommender>
+                </observers>
+            </customer_save_after>
+            <customer_login>
+                <observers>
+                    <brainsins_recommender>
+                        <type>model</type>
+                        <class>brainsins_recommender/observer</class>
+                        <method>customerLogin</method>
+                    </brainsins_recommender>
+                </observers>
+            </customer_login>
+            <customer_logout>
+                <observers>
+                    <brainsins_recommender>
+                        <type>model</type>
+                        <class>brainsins_recommender/observer</class>
+                        <method>customerLogout</method>
+                    </brainsins_recommender>
+                </observers>
+            </customer_logout>
+            <newsletter_subscriber_save_commit_after>
+                <observers>
+                    <brainsins_recommender>
+                        <class>brainsins_recommender/observer</class>
+                        <method>subscribedToNewsletter</method>
+                    </brainsins_recommender>
+                </observers>
+            </newsletter_subscriber_save_commit_after>
+            <controller_action_postdispatch>
+                <observers>
+                    <brainsins_recommender>
+                        <type>singleton</type>
+                        <class>brainsins_recommender/observer</class>
+                        <method>updateCartEvent</method>
+                    </brainsins_recommender>
+                </observers>
+            </controller_action_postdispatch>
+            <checkout_cart_update_items_after>
+                <observers>
+                    <brainsins_recommender>
+                        <class>brainsins_recommender/observer</class>
+                        <method>updateCart</method>
+                    </brainsins_recommender>
+                </observers>
+            </checkout_cart_update_items_after>
+            <checkout_update_cart_after>
+                <observers>
+                    <brainsins_recommender>
+                        <type>singleton</type>
+                        <class>brainsins_recommender/observer</class>
+                        <method>updateCart</method>
+                    </brainsins_recommender>
+                </observers>
+            </checkout_update_cart_after>
+            <sales_quote_save_after>
+                <observers>
+                    <brainsins_recommender>
+                        <type>singleton</type>
+                        <class>brainsins_recommender/observer</class>
+                        <method>updateCart</method>
+                    </brainsins_recommender>
+                </observers>
+            </sales_quote_save_after>
+            <checkout_cart_save_after>
+                <observers>
+                    <brainsins_recommender>
+                        <type>singleton</type>
+                        <class>brainsins_recommender/observer</class>
+                        <method>updateCart</method>
+                    </brainsins_recommender>
+                </observers>
+            </checkout_cart_save_after>
+            <sales_order_payment_place_end>
+                <observers>
+                    <brainsins_recommender>
+                        <type>model</type>
+                        <class>brainsins_recommender/observer</class>
+                        <method>onEndCheckout</method>
+                    </brainsins_recommender>
+                </observers>
+            </sales_order_payment_place_end>
         </events>
     </frontend>
     <admin>
@@ -177,6 +195,7 @@
                 </brainsins_recommender>
             </updates>
         </layout>
+
     </admin>
     <adminhtml>
         <translate>
@@ -200,12 +219,12 @@
                                 <config>
                                     <children>
                                         <brainsins_recommender_options>
-				                            <title>Brainsins Recommender Options</title>
-				                            <sort_order>100</sort_order>
+                                            <title>Brainsins Recommender Options</title>
+                                            <sort_order>100</sort_order>
                                         </brainsins_recommender_options>
                                         <brainsins_recommender_dashboard>
-				                            <title>Brainsins Recommender Dashboard</title>
-				                            <sort_order>101</sort_order>
+                                            <title>Brainsins Recommender Dashboard</title>
+                                            <sort_order>101</sort_order>
                                         </brainsins_recommender_dashboard>
                                     </children>
                                 </config>
@@ -233,15 +252,19 @@
                 <cron_enabled>1</cron_enabled>
                 <cron_time>02,00,00</cron_time>
             </brainsins_recommender_feed>
+            <brainsins_recommender_advanced>
+                <ajax_tracking>0</ajax_tracking>
+                <custom_script>0</custom_script>
+            </brainsins_recommender_advanced>
         </brainsins_recommender_options>
     </default>
     <crontab>
         <jobs>
-          <brainsins_recommender_feeds_cron>
+            <brainsins_recommender_feeds_cron>
                 <run>
                     <model>brainsins_recommender/cron::generateOfflineFeeds</model>
                 </run>
-          </brainsins_recommender_feeds_cron>
+            </brainsins_recommender_feeds_cron>
         </jobs>
     </crontab>
 </config>

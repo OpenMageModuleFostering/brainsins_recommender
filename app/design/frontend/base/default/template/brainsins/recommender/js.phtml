@@ -1,0 +1,414 @@
+<?php $_enabled = Mage::getStoreConfigFlag('brainsins_recommender_options/brainsins_recommender_general/enabled', Mage::app()->getStore()->getStoreId()); ?>
+<?php if($_enabled):?>
+<?php $_bskey = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_general/bs_key', Mage::app()->getStore()->getStoreId()); ?>
+<?php $_bs_ajax_tracking = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_advanced/ajax_tracking', Mage::app()->getStore()->getStoreId()); ?>
+<?php $_bs_custom_script = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_advanced/custom_script', Mage::app()->getStore()->getStoreId()); ?>
+<!-- BrainSINS Code Starts -->
+<script type='text/javascript'>
+		<?php 
+			$_apiMode = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_advanced/api_mode', Mage::app()->getStore()->getStoreId());
+			$_script_path = '"/brainsins.js"';
+			$_custom_script_path = "/$_bskey/$_bskey.js";
+		?>
+		<?php if($_bs_custom_script):?>
+		var bs_custom_script = true;
+		<?php endif; ?>
+		<?php if(!$_bs_ajax_tracking):?>
+			var bs = document.createElement('script');
+			bs.type = 'text/javascript';
+			bs.async = true;
+			bs.src = (document.location.protocol == 'https:' ? 'https://d2xkqxdy6ewr93.cloudfront.net' : 'http://clients.cdn.brainsins.com') + <?php echo $_script_path?> ;
+			var head = document.getElementsByTagName('head')[0];
+			head.appendChild(bs);
+		<?php endif; ?>
+		brainsins_token = "<?php echo $_bskey ?>";
+		<?php if ($_apiMode && $_apiMode == "1") {
+			echo 'var brainsins_api_mode = "B";';
+		}?>
+		<?php
+			//$_lang = explode('_', Mage::app()->getLocale()->getLocaleCode());
+			$_lang = Mage::app()->getStore()->getCode();
+			$currentCurrencyCode = Mage::app()->getStore()->getCurrentCurrencyCode();
+			//HOME PAGE
+			if(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName().'/'.Mage::app()->getRequest()->getRouteName() == 'index/index/cms')
+			{
+				$_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('home', Mage::app()->getStore()->getStoreId());
+				echo "
+					var BrainSINSData = {
+						pageType: 'home',
+						currency: '".$currentCurrencyCode."',
+						language: '".$_lang."'				
+				";
+				echo Mage::helper('brainsins_recommender')->getRecommendersJs($_recommenders);
+				echo "};";
+			}
+			//PRODUCT PAGE
+			elseif(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'product/view')
+			{
+				$_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('product', Mage::app()->getStore()->getStoreId());
+				echo "
+					var BrainSINSData = {
+						pageType: 'product',
+						currency: '".$currentCurrencyCode."',
+						productId: ".Mage::registry('current_product')->getId().",
+						language: '".$_lang."'";
+				echo Mage::helper('brainsins_recommender')->getRecommendersJs($_recommenders);
+				echo "};";
+			}
+			//CART PAGE
+			elseif(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'cart/index')
+			{
+				$_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('cart', Mage::app()->getStore()->getStoreId());
+				$cart_js = '';
+				$quote = Mage::getSingleton('checkout/session')->getQuote();
+				$result = Mage::helper('brainsins_recommender')->updateCartInBrainsins($quote, true);
+				/* SUSTITUIDO POR WS */
+				$quote = Mage::getSingleton('checkout/session')->getQuote();
+				$items = $quote->getAllVisibleItems();
+				if(count($items) > 0)
+				{
+					$cart_js .= "pageType: 'cart',
+								 cart: [
+								 		";
+					for ($i = 0; $i < sizeof($items); $i++)
+					{
+					    $item = $items[$i];
+						$cart_js .= "{id: '{$item->getProductId()}', quantity: '{$item->getQty()}', price: '{$item->getPriceInclTax()}'}";
+						if ($i < sizeof($items) - 1) {
+						$cart_js .= ",";
+						}
+					}
+					$cart_js .= '
+										]';
+				}
+				else
+				{
+					$cart_js .= "pageType: 'cart'";
+				}
+				
+				echo "
+					var BrainSINSData = {
+						".$cart_js.",
+						currency: '".$currentCurrencyCode."',
+						language: '".$_lang."'";
+				echo Mage::helper('brainsins_recommender')->getRecommendersJs($_recommenders);
+				echo "};";
+			}
+			//CHECKOUT PAGE
+			elseif(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'onepage/index' ||
+				Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'multishipping/addresses')
+			{
+				$quote = Mage::getSingleton('checkout/session')->getQuote();
+				$result = Mage::helper('brainsins_recommender')->updateCartInBrainsins($quote, true);
+								
+				echo "
+					var BrainSINSData = {
+						pageType: 'checkout',
+						currency: '".$currentCurrencyCode."',
+						language: '".$_lang."'";
+				echo "};";
+			}
+			//THANK YOU PAGE
+			elseif(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'onepage/success')
+			{
+                $_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('checkout', Mage::app()->getStore()->getStoreId());
+				$orderId = Mage::getSingleton('checkout/session')->getLastOrderId();
+				$order = Mage::getModel('sales/order')->load($orderId);
+				$baseCurrencyCode = Mage::app()->getStore()->getBaseCurrencyCode();
+				$totalAmount = Mage::helper('directory')->currencyConvert($order->getGrandTotal(), $currentCurrencyCode, $baseCurrencyCode);
+				echo "
+					var BrainSINSData = {
+						pageType: 'thankYou',
+						currency: '".$currentCurrencyCode."',
+						language: '".$_lang."',
+						totalAmount: ".number_format($totalAmount, 2, ".", "");
+                echo Mage::helper('brainsins_recommender')->getRecommendersJs($_recommenders);
+				echo "};";
+			}
+			//CATEGORY PAGE
+			elseif(Mage::app()->getRequest()->getControllerName().'/'.Mage::app()->getRequest()->getActionName() == 'category/view')
+			{
+				$_recommenders = Mage::helper('brainsins_recommender')->getConfiguration('category', Mage::app()->getStore()->getStoreId());
+				$categories = array();
+				$root_category = Mage::app()->getStore()->getRootCategoryId();
+				$current_category = Mage::registry('current_category');
+				array_push($categories, $current_category->getId());
+				$parent_category = $current_category->getParentCategory();
+				while ($root_category < $parent_category->getId()) {
+					array_push($categories, $parent_category->getId());
+					$parent_category = $parent_category->getParentCategory();
+				}
+				echo "
+					var BrainSINSData = {
+						pageType: 'category',
+						currency: '".$currentCurrencyCode."',
+						language: '".$_lang."',
+						categoryId: ".$current_category->getId().",
+						categories: '".implode(',', array_reverse($categories))."'";
+				echo Mage::helper('brainsins_recommender')->getRecommendersJs($_recommenders);
+				echo "};";
+			}
+			else
+			{
+				echo "
+					var BrainSINSData = {
+					    pageType: 'other',
+					    currency: '".$currentCurrencyCode."',
+						language: '".$_lang."'";
+				echo "};";
+			}
+		?>
+		<?php 
+		
+			$bs_register = Mage::getSingleton('core/cookie')->get('brainsins_register');
+			$bs_login = Mage::getSingleton('core/cookie')->get('brainsins_login');
+			$bs_logout = Mage::getSingleton('core/cookie')->get('brainsins_logout');
+			$bs_news = Mage::getSingleton('core/cookie')->get('brainsins_news');
+			$email_tracking = Mage::getStoreConfig('brainsins_recommender_options/brainsins_recommender_general/email_tracking', Mage::app()->getStore()->getStoreId());
+			
+			if(!$_bs_ajax_tracking && $bs_register && $bs_register != '0')
+			{
+				if($email_tracking == '1')
+				{
+					$customer_id = Mage::getSingleton('core/cookie')->get('brainsins_register');
+					$customer = Mage::getModel('customer/customer')->load($customer_id);
+					$subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($customer->getEmail());
+					if($subscriber->getId() && $subscriber->getSubscriberStatus() == '1')
+					{
+						Mage::getSingleton('core/cookie')->delete('brainsins_register');
+						$lang = explode('_', Mage::app()->getLocale()->getLocaleCode());
+						echo 'BrainSINSData.userEmail = "' . $customer->getEmail() .'";
+							BrainSINSData.userNewsletter = 1;
+							BrainSINSData.login = 1;';
+					}
+                    else
+                    {
+                        Mage::getSingleton('core/cookie')->delete('brainsins_register');
+                        $lang = explode('_', Mage::app()->getLocale()->getLocaleCode());
+                        echo 'BrainSINSData.userEmail = "' . $customer->getEmail() .'";
+							BrainSINSData.userNewsletter = 0;
+							BrainSINSData.login = 1;';
+                    }
+					unset($customer);unset($subscriber);
+				}
+				elseif($email_tracking == '2')
+				{
+					$customer_id = Mage::getSingleton('core/cookie')->get('brainsins_register');
+					$customer = Mage::getModel('customer/customer')->load($customer_id);
+					$lang = explode('_', Mage::app()->getLocale()->getLocaleCode());
+					echo 'BrainSINSData.userEmail = "' . $customer->getEmail() .'";
+							BrainSINSData.userNewsletter = 0;
+							BrainSINSData.login = 1;';
+				}
+				elseif($email_tracking == '0')
+				{
+					$customer_id = Mage::getSingleton('core/cookie')->get('brainsins_register');
+					$customer = Mage::getModel('customer/customer')->load($customer_id);
+					$lang = explode('_', Mage::app()->getLocale()->getLocaleCode());
+					echo 'BrainSINSData.userEmail = "' . $customer->getEmail() .'";
+							BrainSINSData.userNewsletter = 0;
+							BrainSINSData.login = 1;';
+				}
+				Mage::getSingleton('core/cookie')->set('brainsins_register', '0', time()+86400, '/');
+				if(Mage::getSingleton('core/cookie')->get('brainsins_login'))
+					Mage::getSingleton('core/cookie')->set('brainsins_login', '0', time()+86400, '/');
+				if(Mage::getSingleton('core/cookie')->get('brainsins_logout'))
+					Mage::getSingleton('core/cookie')->set('brainsins_logout', '0', time()+86400, '/');
+				if(Mage::getSingleton('core/cookie')->get('brainsins_news'))
+					Mage::getSingleton('core/cookie')->set('brainsins_news', '0', time()+86400, '/');
+				unset($customer);
+			}
+		?>
+		<?php 
+			if(!$_bs_ajax_tracking && $bs_login && $bs_login != '0' && $bs_register == '0')
+			{
+				if($email_tracking == '1')
+				{
+					$customer_id = Mage::getSingleton('core/cookie')->get('brainsins_login');
+					$customer = Mage::getModel('customer/customer')->load($customer_id);
+					$subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($customer->getEmail());
+					if($subscriber->getId() && $subscriber->getSubscriberStatus() == '1')
+					{
+						Mage::getSingleton('core/cookie')->delete('brainsins_login');
+						$lang = explode('_', Mage::app()->getLocale()->getLocaleCode());
+						echo 'BrainSINSData.userEmail = "' . $customer->getEmail() .'";
+							BrainSINSData.userNewsletter = 1;
+							BrainSINSData.login = 1;';
+					}
+                    else
+                    {
+                        Mage::getSingleton('core/cookie')->delete('brainsins_login');
+                        $lang = explode('_', Mage::app()->getLocale()->getLocaleCode());
+                        echo 'BrainSINSData.userEmail = "' . $customer->getEmail() .'";
+							BrainSINSData.userNewsletter = 0;
+							BrainSINSData.login = 1;';
+                    }
+					unset($customer);unset($subscriber);
+				}
+				elseif($email_tracking == '2')
+				{
+					$customer_id = Mage::getSingleton('core/cookie')->get('brainsins_login');
+					$customer = Mage::getModel('customer/customer')->load($customer_id);
+					$lang = explode('_', Mage::app()->getLocale()->getLocaleCode());
+					echo 'BrainSINSData.userEmail = "' . $customer->getEmail() .'";
+							BrainSINSData.userNewsletter = 1;
+							BrainSINSData.login = 1;';
+				}
+				elseif($email_tracking == '0')
+				{
+					$customer_id = Mage::getSingleton('core/cookie')->get('brainsins_login');
+					$customer = Mage::getModel('customer/customer')->load($customer_id);
+					$lang = explode('_', Mage::app()->getLocale()->getLocaleCode());
+					echo 'BrainSINSData.userEmail = "' . $customer->getEmail() .'";
+							BrainSINSData.userNewsletter = 0;
+							BrainSINSData.login = 1;';
+				}
+				Mage::getSingleton('core/cookie')->set('brainsins_login', '0', time()+86400, '/');
+				unset($customer);
+			}
+		?>
+		<?php
+			if(!$_bs_ajax_tracking && $bs_logout && $bs_logout != '0' && $bs_register == '0')
+			{
+				echo 'BrainSINSData.logout = 1;';
+				Mage::getSingleton('core/cookie')->set('brainsins_logout', '0', time()+86400, '/');
+			}
+		?>
+		<?php
+			if(!$_bs_ajax_tracking && $bs_news && $bs_news != '0' && $bs_register == '0')
+			{
+				$customer_id = Mage::getSingleton('core/cookie')->get('brainsins_news');
+				$customer = Mage::getModel('customer/customer')->load($customer_id);
+				$subscriber = Mage::getModel('newsletter/subscriber')->loadByEmail($customer->getEmail());
+				$lang = explode('_', Mage::app()->getLocale()->getLocaleCode());
+				if($subscriber->getSubscriberStatus() == '3')
+				{
+					echo 'BrainSINSData.userEmail = "' . $customer->getEmail() .'";
+							BrainSINSData.userNewsletter = 0;
+							BrainSINSData.login = 1;';
+				}
+				elseif($subscriber->getSubscriberStatus() == '1')				{
+					echo 'BrainSINSData.userEmail = "' . $customer->getEmail() .'";
+							BrainSINSData.userNewsletter = 1;
+							BrainSINSData.login = 1;';
+				}
+				Mage::getSingleton('core/cookie')->set('brainsins_news', '0', time()+86400, '/');
+				unset($customer);unset($subscriber);
+			}
+		?>
+		<?php 
+			if ($_bs_ajax_tracking) {
+				$_url = Mage::getUrl("brainsins/tracking/bdata", array('_secure' => true));
+				?>
+					var bdata_controller_url = "<?php echo $_url?>";
+					bdata_controller_url += "rnd/" + new Date().getTime() + "/";
+					bdata_controller_url += "bdata/" + encodeURIComponent(JSON.stringify(BrainSINSData));
+
+					bdata_controller_url = bdata_controller_url.replace("https:","").replace("http:","");
+					
+					new Ajax.Request(bdata_controller_url, { 
+							method: "get",
+							onSuccess: function(transport) {
+				    			var newBdata = transport.responseJSON;
+				    			if (newBdata) {
+				    				BrainSINSData = newBdata;
+					    		}				    			
+				    			var bs = document.createElement('script');
+								bs.type = 'text/javascript';
+								bs.async = true;
+								bs.src = (document.location.protocol == 'https:' ? 'https://d2xkqxdy6ewr93.cloudfront.net' : 'http://clients.cdn.brainsins.com') + <?php echo $_script_path?> ;
+								var head = document.getElementsByTagName('head')[0];
+								head.appendChild(bs);
+								var domain = "." + window.location.hostname;
+								bsUnsetCookie("brainsins_login", domain);
+								bsUnsetCookie("brainsins_news", domain);
+								bsUnsetCookie("brainsins_register", domain);
+								bsUnsetCookie("brainsins_logout", domain);
+							}
+					});
+					
+				<?php 
+			}
+		?>
+		<?php if($_bs_custom_script):?>
+		
+		var bs = document.createElement('script');
+		bs.type = 'text/javascript';
+		bs.async = true;
+		bs.src = (document.location.protocol == 'https:' ? 'https://d2xkqxdy6ewr93.cloudfront.net' : 'http://clients.cdn.brainsins.com') + '<?php echo $_custom_script_path?>';
+		var head = document.getElementsByTagName('head')[0];
+		head.appendChild(bs);
+		<?php endif; ?>
+	</script>
+<script type="text/javascript">
+		function bsTrackProductCallback() {
+			var cookies = BrainSINS.Cookies;
+			var constants = BrainSINS.Constants;
+			var url = cookies.get(constants.urlNext);
+			self.location = url;
+			return false;
+		};
+		function bsTrackProductClicked(productId, idRecommendation, idPrevPage, url) {
+			var cookies = BrainSINS.Cookies;
+			var constants = BrainSINS.Constants;
+			cookies.set(constants.urlNext, url, constants.daysInCookie);
+			cookies.set(constants.idRecommendation, idRecommendation,
+					constants.daysInCookie);
+			cookies.set(constants.idPrevPage, idPrevPage, constants.daysInCookie);
+			BrainSINSTracker.trackProductview(productId, "bsTrackProductCallback");
+			return false;
+		};
+
+		function bsGetCookie(name) {
+			var value = "; " + document.cookie;
+			var parts = value.split("; " + name + "=");
+			if (parts.length == 2) 
+				return parts.pop().split(";").shift();
+			return "";
+		}
+
+		function bsSetCookie(propertyName, value, domain) {
+			document.cookie = propertyName + "=" + encodeURI(value) + ";path=/"
+			+ ";max-age=31536000" + (domain != null ? ";domain=" + domain : "");			
+		}		
+
+		function bsUnsetCookie(propertyName, domain) {
+			document.cookie = propertyName + "='';path=/"
+			+ ";max-age=0" + (domain != null ? ";domain=" + domain : "");	
+		}
+
+		
+		function requestBrainSINSRecommendations(storeUrl, recommenderId, template, div, maxResults, productId, userId, filterCategories, filterLevel, callback, debug) {
+			
+			if (productId == null) productId = BrainSINSData.productId;
+			
+			if (userId == null) userId = bsGetCookie("bsCoId");
+			
+			var url = storeUrl + "/brainsins/recommendation/recommendations";
+			url += "?recommenderId=" + recommenderId;
+			url += "&template=" + template;
+			url += productId == null ? "" : "&productId=" + productId;
+			url += userId == null ? "" : "&userId=" + userId;
+			url += maxResults == null ? "" : "&maxResults=" + maxResults;
+			url += filterCategories == null ? "" : "&filterCategories=" + filterCategories;
+			url += filterLevel == null ? "" : "&filterLevel=" + filterLevel;
+
+			url += "&rnd=" + new Date().getTime();
+			//brainsins/smartecommerce/test.phtml
+			if (debug) {
+				console.log(url);
+			}
+			new Ajax.Request(url,
+					{ method: "get",
+					onSuccess: function(transport) {
+		    			document.getElementById(div).innerHTML = transport.responseText;
+                        if (typeof callback == "function") {
+                            callback();
+                        }
+					}}
+					);
+			
+		}
+	</script>
+<!-- BrainSINS Code Ends -->
+<?php endif; ?>

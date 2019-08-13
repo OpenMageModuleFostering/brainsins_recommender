@@ -19,7 +19,7 @@ select.custom-select-first {
 	font: 12px arial, helvetica, sans-serif;
 	min-height: 17px;
 	width: 381px!important;
-	margin-left: -36px;
+	/*margin-left: -36px;*/
 }
 
 select.custom-select-last {
@@ -29,8 +29,9 @@ select.custom-select-last {
 	background: #fff;
 	font: 12px arial, helvetica, sans-serif;
 	min-height: 17px;
-	width: 317px!important;
+	/*width: 317px!important;*/
 	margin-left: 2px;
+    width: 220px!important
 }
 
 select.custom-select-after-before {
@@ -42,7 +43,7 @@ select.custom-select-after-before {
 	min-height: 17px;
 	width: 62px!important;
 	min-width: 62px!important;
-	margin-left: -36px;
+	/*margin-left: -36px;*/
 }
 
 select.custom-select-after-before-hide {
@@ -54,7 +55,7 @@ select.custom-select-after-before-hide {
 	min-height: 17px;
 	width: 62px!important;
 	min-width: 62px!important;
-	margin-left: -36px;
+	/*margin-left: -36px;*/
 	display: none;
 }
 
@@ -93,19 +94,21 @@ input.custom-input-text {
 
 p.custom-p {
 	margin-top: 3px;
-	margin-left: -36px;
+	/*margin-left: -36px;*/
 	min-height: 21px;
 }
 
 button.custom {
 	float: right!important;
 	margin-left: 2px;
+    margin-top:5px;
+    margin-bottom:5px;
 }
 
 div.recommender-separator {
 	border-bottom: 1px solid black;
 	margin-bottom: 6px;
-	margin-left: -36px;
+	/*margin-left: -36px;*/
 }
 
 .form-list td.value p.note {
@@ -139,4 +142,12 @@ span.custom-div {
 .brainsins-help {
 	font-weight: bold;
 	margin: -10px 0 10px 0;
+}
+
+.brainsins-recommenders-first-line {
+    margin-bottom: 5px;
+}
+
+.brainsins-recommenders-first-line-second-item {
+    width:20px;
 }

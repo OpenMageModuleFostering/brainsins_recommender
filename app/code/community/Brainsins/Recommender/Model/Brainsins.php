@@ -22,33 +22,7 @@
  *  Please do not hesitate to contact us at info@brainsins.com
 */
 
-class Brainsins_Recommender_Model_Cron
-{	
-	public function generateOfflineFeeds($bskey)
-	{
-		try
-		{
-			$this->_productsFeed($bskey);
-			return true;
-		}
-		catch(Exception $e)
-		{
-			Mage::throwException(Mage::helper('brainsins_recommender')->__('ERROR GENERATING OFFLINE FEEDS'));
-			return false;
-		}
-	}
-
-	protected function _productsFeed($bskey)
-	{
-// 		$feed = Mage::helper('brainsins_recommender')->getProductsFeed($bskey);
-// 		$io = new Varien_Io_File();
-// 		$path = Mage::getBaseDir('media') . DS . 'brainsins_feeds' . DS;
-// 		$file = $path . DS . $bskey . '.xml';
-// 		$io->setAllowCreateFolders(true);
-// 		$io->open(array('path' => $path));
-// 		$io->streamOpen($file, 'w+');
-// 		$io->streamLock(true);
-// 		$io->streamWrite($feed);
-// 		$io->streamClose();
-	}
+class Brainsins_Recommender_Model_Brainsins extends Mage_Core_Model_Abstract
+{
+	
 }

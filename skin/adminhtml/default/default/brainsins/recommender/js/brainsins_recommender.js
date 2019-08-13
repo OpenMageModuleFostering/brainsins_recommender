@@ -26,16 +26,19 @@ Event.observe(window, 'load', function() {
 	{
 		$('brainsins_recommender_options_brainsins_recommender_general').down(2).show();
 	}
-	if($('urlOfflineFeedController'))
-	{
-		runOfflineFeed($('urlOfflineFeedController').value, $('urlOfflineFeedFile').value, '');
-		$('btnRunOfflineFeed').hide();
-	}
-	else
-	{
+//	if($('urlOfflineFeedController'))
+//	{
+//		runOfflineFeed($('urlOfflineFeedController').value, $('urlOfflineFeedFile').value, '');
+//		$('btnRunOfflineFeed').hide();
+//	}
+//	else
+//	{
+	if ($('btnRunOfflineFeed')) {
 		$('btnRunOfflineFeed').removeClassName('disabled');
 		$('btnRunOfflineFeed').removeClassName('disabled');
 		$('btnRunOfflineFeed').enable();
+	}
+	if ($('btnViewOfflineFeed')) {
 		$('btnViewOfflineFeed').removeClassName('disabled');
 		$('btnViewOfflineFeed').removeClassName('disabled');
 		$('btnViewOfflineFeed').enable();
@@ -43,6 +46,7 @@ Event.observe(window, 'load', function() {
 		$('btnViewOnlineFeed').removeClassName('disabled');
 		$('btnViewOnlineFeed').enable();
 	}
+//	}
 	if($('brainsins_recommender_options_product_feed_product_description_attribute').value == '')
 	{
 		var options = $('brainsins_recommender_options_product_feed_product_description_attribute');
@@ -344,4 +348,8 @@ function goToError(div) {
 
 function FormatNu(nu) {
 	return nu>9?nu:'0'+nu;
+}
+
+function showRecommenderList() {
+    window.open("https://analytics.brainsins.com/optimization/recommenderslist");
 }

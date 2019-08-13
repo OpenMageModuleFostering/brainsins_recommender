@@ -42,7 +42,7 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ho
                    $html .= $this->_getRowTemplateHtml($i);
 			}
 		}
-		$html .= '</ul>';
+        $html .= "</ul>";
 		$html .= $this->_getAddRowButtonHtml('brainsins_recommender_recommenders_container_home',
            'brainsins_recommender_recommenders_home_template', Mage::helper('brainsins_recommender')->__('Add new recommender'));
 
@@ -52,21 +52,34 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ho
 	protected function _getRowTemplateHtml($rowIndex = 0)
 	{
 		$html = '<li>';
-		$html .= '<div style="margin:5px 0 10px;">';
-		if($this->getElement()->getData('value/'.'recommender_name/'.$rowIndex) != '')
-			$html .= $this->_getRecommenderNamesHtmlSelect($rowIndex, $this->getElement()->getData('value/'.'recommender_name/'.$rowIndex));
-		else
-			$html .= $this->_getRecommenderNamesHtmlSelect($rowIndex, '');
-		$html .= '<div style="height: 2px;"></div>';
+        $html .= '<div style="margin:5px 0 10px;">';
+
+        if($this->getElement()->getData('value/'.'recommender_name/'.$rowIndex) != '')
+        {
+            $html .= $this->_getRecommenderIdInputBox($rowIndex, $this->getElement()->getData('value/'.'recommender_name/'.$rowIndex));
+        }
+        else
+        {
+			$html .= $this->_getRecommenderIdInputBox($rowIndex, '');
+        }
+
+       // $html.="<br/>";
+
+
 		if($this->_getValue('custom_div/'.$rowIndex) != '')
 			$class = 'custom-select-after-before-hide';
 		else
 			$class = 'custom-select-after-before';
 		$html .= $this->_getBeforeAfterHtmlSelect($rowIndex, $this->getElement()->getData('value/'.'recommender_after_before/'.$rowIndex), 'recommender_after_before', $class);
-		if($this->getElement()->getData('value/'.'recommender_position/'.$rowIndex) != '')
+
+
+        if($this->getElement()->getData('value/'.'recommender_position/'.$rowIndex) != '')
 			$html .= $this->_getPositionsHtmlSelect($rowIndex, $this->getElement()->getData('value/'.'recommender_position/'.$rowIndex));
 		else
 			$html .= $this->_getPositionsHtmlSelect($rowIndex, 'content');
+
+
+
 		$html .= '<p class="custom-p">';
 		$html .= '<span class="custom-div"';
 		if($this->_getValue('custom_div/'.$rowIndex) == '')
@@ -104,12 +117,12 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ho
 	{
 		return $this->getElement()->getData('value/' . $key) == $value ? 'selected="selected"' : '';
 	}
-	
+
 	protected function _getRadioSelected($key, $value)
 	{
 		return $this->getElement()->getData('value/' . $key) == $value ? 'checked="yes"' : '';
 	}
- 
+
 	protected function _getAddRowButtonHtml($container, $template, $title='Add')
 	{
 		if (!isset($this->_addRowButtonHtml[$container]))
@@ -124,7 +137,7 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ho
 		}
 		return $this->_addRowButtonHtml[$container];
 	}
- 
+
 	protected function _getRemoveRowButtonHtml($selector = 'li', $title = 'Delete')
 	{
 		if (!$this->_removeRowButtonHtml)
@@ -140,12 +153,23 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ho
 		return $this->_removeRowButtonHtml;
 	}
 
+    protected function _getRecommenderIdInputBox($rowIndex, $value) {
+        $name = $this->getElement()->getName().'[recommender_name][]';
+        $id = '[recommender_name]['.$rowIndex.']';
+
+        $html = "<div class='brainsins-recommenders-first-line'>";
+        $html .= '<label for="' . $name . '" class="brainsins-recommenders-first-line-first-item">Recommender Id: </label>';
+        $html .= '<input name="' . $name . '" id="' . $id . '" type="text" value="' . $value .'" class="brainsins-recommenders-first-line-second-item">';
+        $html .= "</div>";
+        return $html;
+    }
+
 	protected function _getRecommenderNamesHtmlSelect($rowIndex, $default_value = '')
 	{
 		$recommenders = Mage::helper('brainsins_recommender')->getRecommenders('1');
 
 		$tmp = Mage::app()->getLayout()->createBlock('core/html_select')
-		    ->setName($this->getElement()->getName().'[recommender_name][]"'.$this->_getDisabled())
+		    ->setName($this->getElement()->getName().'[recommender_name][]'.$this->_getDisabled())
 		    ->setId('[recommender_name]['.$rowIndex.']')
 		    ->setTitle(Mage::helper('brainsins_recommender')->__('Recommender name'))
 			->setValue($default_value)
@@ -154,13 +178,13 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ho
 
 		return $select->getHtml();
 	}
-	
+
 	protected function _getPositionsHtmlSelect($rowIndex, $default_value = '')
 	{
 		$positions = Mage::helper('brainsins_recommender')->getPositions('1');
 
 		$tmp = Mage::app()->getLayout()->createBlock('core/html_select')
-		    ->setName($this->getElement()->getName().'[recommender_position][]"'.$this->_getDisabled())
+		    ->setName($this->getElement()->getName().'[recommender_position][]'.$this->_getDisabled())
 		    ->setId('[recommender_position]['.$rowIndex.']')
 		    ->setTitle(Mage::helper('brainsins_recommender')->__('Recommender position'))
 			->setValue($default_value)
@@ -170,7 +194,7 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ho
 
 		return $select->getHtml();
 	}
-	
+
 	protected function _getBeforeAfterHtmlSelect($rowIndex, $default_value = '', $default_id = '', $class)
 	{
 		$positions = array();
@@ -178,7 +202,7 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ho
 		$positions[] = array('value' => 'before', 'label' => Mage::helper('brainsins_recommender')->__('Before'));
 
 		$tmp = Mage::app()->getLayout()->createBlock('core/html_select')
-		    ->setName($this->getElement()->getName().'[recommender_after_before][]"'.$this->_getDisabled())
+		    ->setName($this->getElement()->getName().'[recommender_after_before][]'.$this->_getDisabled())
 		    ->setId('[recommender_after_before]['.$rowIndex.']')
 			->setValue($default_value)
 		    ->setClass($class);
@@ -186,7 +210,7 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ho
 
 		return $select->getHtml();
 	}
-	
+
 	protected function _getCustomDivPositionsHtmlSelect($rowIndex, $default_value = '', $id, $class = '')
 	{
 		$positions = array();
@@ -197,7 +221,7 @@ class Brainsins_Recommender_Block_Adminhtml_System_Config_Source_Recommenders_Ho
 		$positions[] = array('value' => 'after', 'label' => Mage::helper('brainsins_recommender')->__('After'));
 
 		$tmp = Mage::app()->getLayout()->createBlock('core/html_select')
-		    ->setName($this->getElement()->getName().'['.$id.'][]"'.$this->_getDisabled())
+		    ->setName($this->getElement()->getName().'['.$id.'][]'.$this->_getDisabled())
 		    ->setId('['.$id.']['.$rowIndex.']')
 			->setValue($default_value)
 		    ->setClass($class);
