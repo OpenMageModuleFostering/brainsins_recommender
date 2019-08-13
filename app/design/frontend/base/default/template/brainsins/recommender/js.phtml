@@ -146,10 +146,11 @@
             $total = Mage::helper('brainsins_recommender')->getTotalAmount($order);
             if ($total) {
                 $bdata["totalAmount"] = $total;
-                try{
+                if(is_callable(array($order,"getIncrementId"))){
                     $bdata["idPurchase"] = $order->getIncrementId();
-                }catch(Exception $e){
-                    error_log("[BrainSINS] Id purchase not found");
+                }else{
+                    $bdata["message"]="getIncrementId not found";
+                    error_log("[BrainSINS] getIncrementId not found");
                 }
             }
         }
