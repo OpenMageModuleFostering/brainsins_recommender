@@ -86,6 +86,19 @@ class Brainsins_Recsins_Model_Api_ProductsApi extends Mage_Catalog_Model_Product
 	private function checkOption($option, $options) {
 		return array_key_exists($option, $options) && $options[$option] == "1";
 	}
+	
+	private function _getGalleryImageUrls($id) {
+	
+		$result = array();
+	
+		$gallery = Mage::getModel('catalog/product')->load($id)->getMediaGalleryImages();
+		$count = Mage::getModel('catalog/product')->load($id)->getMediaGalleryImages()->count();
+		foreach($gallery as $image) {
+			$result[] = $image->getUrl();
+		}
+	
+		return $result;
+	}
 
 	public function info($productId, $storeId = null, $options = array(), $filter = array())
 	{
@@ -260,6 +273,11 @@ class Brainsins_Recsins_Model_Api_ProductsApi extends Mage_Catalog_Model_Product
 		if ($this->checkOption("getVisibility", $options)) {
 			$visibility = $product->getVisibility();
 			$result["bs_visibility"] = $visibility;
+		}
+		
+		if ($this->checkOption("getFullGallery", $options)) {
+			$galleryUrls = $this->_getGalleryImageUrls($productId);
+			$result["bs_gallery_images"] = $galleryUrls;
 		}
 
 		return $result;
