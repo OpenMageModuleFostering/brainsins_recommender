@@ -1,0 +1,142 @@
+.columns .section-config .form-list td.value {
+	width: auto!important;
+	padding-right: 5px !important;
+}
+
+li.tab-brainsins-extensions dl dt {
+	background: url(../images/brainsins.png) no-repeat scroll 3% 40% #d1dedf;
+	color: #306375;
+	padding-left: 26px;
+	min-height: 18px;
+}
+
+
+select.custom-select-first {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #aaa #c8c8c8 #c8c8c8 #aaa;
+	background: #fff;
+	font: 12px arial, helvetica, sans-serif;
+	min-height: 17px;
+	width: 381px!important;
+	margin-left: -36px;
+}
+
+select.custom-select-last {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #aaa #c8c8c8 #c8c8c8 #aaa;
+	background: #fff;
+	font: 12px arial, helvetica, sans-serif;
+	min-height: 17px;
+	width: 317px!important;
+	margin-left: 2px;
+}
+
+select.custom-select-after-before {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #aaa #c8c8c8 #c8c8c8 #aaa;
+	background: #fff;
+	font: 12px arial, helvetica, sans-serif;
+	min-height: 17px;
+	width: 62px!important;
+	min-width: 62px!important;
+	margin-left: -36px;
+}
+
+select.custom-select-after-before-hide {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #aaa #c8c8c8 #c8c8c8 #aaa;
+	background: #fff;
+	font: 12px arial, helvetica, sans-serif;
+	min-height: 17px;
+	width: 62px!important;
+	min-width: 62px!important;
+	margin-left: -36px;
+	display: none;
+}
+
+select.custom-select-after-before-div {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #aaa #c8c8c8 #c8c8c8 #aaa;
+	background: #fff;
+	font: 12px arial, helvetica, sans-serif;
+	min-height: 21px;
+	width: 71px!important;
+	margin-right: 1px;
+}
+
+select.custom-select-after-before-div-hide {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #aaa #c8c8c8 #c8c8c8 #aaa;
+	background: #fff;
+	font: 12px arial, helvetica, sans-serif;
+	min-height: 21px;
+	width: 71px!important;
+	margin-right: 1px;
+	display: none;
+}
+
+input.custom-input-text {
+	border-width: 1px;
+	border-style: solid;
+	border-color: #aaa #c8c8c8 #c8c8c8 #aaa;
+	background: #fff;
+	font: 12px arial, helvetica, sans-serif;
+	padding: 2px;
+	width: 156px!important;
+}
+
+p.custom-p {
+	margin-top: 3px;
+	margin-left: -36px;
+	min-height: 21px;
+}
+
+button.custom {
+	float: right!important;
+	margin-left: 2px;
+}
+
+div.recommender-separator {
+	border-bottom: 1px solid black;
+	margin-bottom: 6px;
+	margin-left: -36px;
+}
+
+.form-list td.value p.note {
+	width: 275px!important;
+}
+
+span.url-feed {
+	margin-left: -80px!important;
+	margin-right: 5px!important;
+}
+
+span.url-feed-offline {
+	margin-left: -80px!important;
+	margin-right: 5px!important;
+	background: url(../images/feed_file_ok.gif) no-repeat scroll 100% 50%;
+	padding-right: 22px;
+}
+
+span.feed-filenok {
+	margin-left: -80px!important;
+	margin-right: 5px!important;
+	background: url(../images/feed_file_nok.gif) no-repeat scroll 100% 50%;
+	padding-right: 22px;
+}
+
+span.custom-div {
+	font-weight: bold;
+	color: #eb5e00;
+}
+
+.brainsins-help {
+	font-weight: bold;
+	margin: -10px 0 10px 0;
+}

@@ -1,13 +1,13 @@
 {
     "name": "OpenMageModuleFostering/Brainsins_Recommender",
     "type": "magento-module",
-    "license": "GPL-3.0",
+    "license": "GPL",
     "homepage": "",
-    "description": "Brainsins Recommender for Magento",
+    "description": "BrainSINS Smart eCommerce is a 360º personalization suite for eCommerce that helps eCommerce websites to increase up to 30% their sales.",
     "authors": [
     {
         "name": "BrainSINS",
-        "email": "alejandro.cuevas@brainsins.com"
+        "email": "support@brainsins.com"
     }
 ],
     "suggest": {
