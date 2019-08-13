@@ -251,7 +251,7 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 		//track page url
 		$product = Mage::registry('current_product');
 		if (isset($product) && $product) {
-				
+
 
 			$pid = $product->getId();
 			$name = $product->getName();
@@ -406,7 +406,7 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 
 		if (isset($key) && $key != null && isset($recommenderId)) {
 
-			$paintCallback = "null";			
+			$paintCallback = "null";
 			if ($placeKey == 'brainsins/BS_HOME_RECOMMENDER') {
 				$paintCallback = "bsPaintHomeRecommendations";
 			} elseif ($placeKey == 'brainsins/BS_PRODUCT_RECOMMENDER') {
@@ -418,44 +418,67 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 			} elseif ($placeKey == 'brainsins/BS_CATEGORY_RECOMMENDER') {
 				$paintCallback = "bsPaintCategoryRecommendations";
 			}
-			
+				
 			$script .= '<script type="text/javascript">' . PHP_EOL;
 			$script .= 'var bsHost = (("https:" == document.location.protocol) ? "https://" : "http://");' . PHP_EOL;
 			$script .= 'document.write(unescape("%3Cscript src=\'" + bsHost + "' . $recUrl . '/bsrecwidget.js\' type=\'text/javascript\'%3E%3C/script%3E"));' . PHP_EOL;
 			$script .= "</script>" . PHP_EOL;
-			
+				
 			$script .= '<script type="text/javascript">' . PHP_EOL;
 			$script .= 'var BrainSINSRecommender = BrainSINS.getRecommender(BrainSINSTracker);' . PHP_EOL;
 			$script .= 'BrainSINSRecommender.loadCSS(' . $recommenderId . ");" . PHP_EOL;
-			
+				
 			$useHighDetail = Mage::getStoreConfig('brainsins/BS_USE_HIGH_DETAIL');
 			if (isset($useHighDetail) && $useHighDetail == "1") {
 				$script .= 'BrainSINSRecommender.setDetailsLevel("high");' . PHP_EOL;
 			}
-			
-			$currencySymbol = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
-			$currencyJs = "";
+				
+				
 			$currencyCode = Mage::app()->getStore()->getCurrentCurrencyCode();
+				
+			$selectedSymbol = Mage::getStoreConfig("brainsins/BS_". $currencyCode . "_SYMBOL");
+			$selectedPosition = Mage::getStoreConfig("brainsins/BS_". $currencyCode . "_POSITION");
+			$selectedDelimiter = Mage::getStoreConfig("brainsins/BS_". $currencyCode . "_DELIMITER");
+
+			if (isset($selectedSymbol) && $selectedSymbol) {
+				$currencySymbol = $selectedSymbol;
+			} else {
+				$currencySymbol = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+			}
+
+			$currencyPosition = "curr_symb_right";
+			if (isset($selectedPosition) && ($selectedPosition == "curr_symb_left" || $selectedPosition == "curr_symb_right")) {
+				$currencyPosition = $selectedPosition;
+			}
+				
+			$currencyDelimiter = ",";
+			if (isset($selectedDelimiter) && $selectedDelimiter) {
+				$currencyDelimiter = $selectedDelimiter;
+			}
+				
+			if ($currencyPosition == "curr_symb_left") {
+				$script .= "BrainSINSRecommender.setCurrencySymbolPosition( BrainSINS.RecommenderConstants.leftPosition );" . PHP_EOL;
+			} else {
+				$script .= "BrainSINSRecommender.setCurrencySymbolPosition( BrainSINS.RecommenderConstants.rightPosition );" . PHP_EOL;
+			}
+			$script .= "BrainSINSRecommender.setCurrencyDelimiter( '$currencyDelimiter' );" . PHP_EOL;
+
+				
+			$currencyJs = "";
 			$langCode = Mage::app()->getStore()->getCode() . $currencyCode;
-			
+				
 			if ($currencySymbol == "$") {
 				$script .= "BrainSINSRecommender.setCurrencySymbol( BrainSINS.RecommenderConstants.dollar );" . PHP_EOL;
-				$script .= "BrainSINSRecommender.setCurrencySymbolPosition( BrainSINS.RecommenderConstants.leftPosition );" . PHP_EOL;
-				$script .= "BrainSINSRecommender.setCurrencyDelimiter( '.' );" . PHP_EOL;
 			} else if ($currencySymbol == "£") {
 				$script .= "BrainSINSRecommender.setCurrencySymbol( BrainSINS.RecommenderConstants.pound );" . PHP_EOL;
-				$script .= "BrainSINSRecommender.setCurrencySymbolPosition( BrainSINS.RecommenderConstants.leftPosition );" . PHP_EOL;
-				$script .= "BrainSINSRecommender.setCurrencyDelimiter( '.' );" . PHP_EOL;
 			} else if ($currencySymbol == "€") {
 				//default behaviour
 			} else {
 				$script .= "BrainSINSRecommender.setCurrencySymbol('$currencySymbol');" . PHP_EOL;
-				$script .= "BrainSINSRecommender.setCurrencySymbolPosition( BrainSINS.RecommenderConstants.leftPosition );" . PHP_EOL;
-				$script .= "BrainSINSRecommender.setCurrencyDelimiter( '.' );" . PHP_EOL;
 			}
-			
-			$script .= "</script>" . PHP_EOL;
 				
+			$script .= "</script>" . PHP_EOL;
+
 			$script .= '<script type="text/javascript">' . PHP_EOL;
 
 			$baseUrl = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
@@ -467,35 +490,35 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 			} else {
 				$callUrl .= "/recsins/index/getRecommendations";
 			}
-			
-			
+				
+				
 			$script .= 'new Ajax.Request("' . $callUrl;
-			
+				
 			$script .= '/recId/' . $recommenderId;
 			$script .= '/userId/' . $userId;
-			
+				
 			if ($placeKey == 'brainsins/BS_CATEGORY_RECOMMENDER') {
 				$script .= '/categories/' . $productId;
 				$script .= '/filter/all';
 			} elseif ($placeKey == 'brainsins/BS_PRODUCT_RECOMMENDER') {
 				$script .= '/prodId/' . $productId;
 			}
-			
+				
 			$script .= '/lang/' . $langCode;
 			$script .= '/divName/' . $divId;
-			
+				
 			$script .= '",{';
 			$script .= 'method : "get",' . PHP_EOL;
-			$script .= 'onSuccess : function(transport) {' . PHP_EOL;			
+			$script .= 'onSuccess : function(transport) {' . PHP_EOL;
 			$script .= 'if (typeof ' . $paintCallback . ' == "function") {';
 			$script .= $paintCallback . "(transport.responseJSON);";
 			$script .= "} else {";
 			$script .= "BrainSINSRecommender.paintRecommendations(transport.responseJSON);";
 			$script .="}";
-			
+				
 			$script .= '}' . PHP_EOL;
 			$script .= '});' . PHP_EOL;
-				
+
 			$script .= "</script>" . PHP_EOL;
 		}
 
@@ -532,28 +555,51 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 		if (isset($key) && $key != null && isset($recommenderId)) {
 
 			$paintCallback = "null";
-				
-			$currencySymbol = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
-			$currencyJs = "";
+
 			$currencyCode = Mage::app()->getStore()->getCurrentCurrencyCode();
+				
+			$selectedSymbol = Mage::getStoreConfig("brainsins/BS_". $currencyCode . "_SYMBOL");
+			$selectedPosition = Mage::getStoreConfig("brainsins/BS_". $currencyCode . "_POSITION");
+			$selectedDelimiter = Mage::getStoreConfig("brainsins/BS_". $currencyCode . "_DELIMITER");
+			if (isset($selectedSymbol) && $selectedSymbol) {
+				$currencySymbol = $selectedSymbol;
+			} else {
+				$currencySymbol = Mage::app()->getLocale()->currency(Mage::app()->getStore()->getCurrentCurrencyCode())->getSymbol();
+			}
+
+			$currencyPosition = "curr_symb_right";
+			if (isset($selectedPosition) && ($selectedPosition == "curr_symb_left" || $selectedPosition == "curr_symb_right")) {
+				$currencyPosition = $selectedPosition;
+			}
+				
+			$currencyDelimiter = ",";
+			if (isset($selectedDelimiter) && $selectedDelimiter) {
+				$currencyDelimiter = $selectedDelimiter;
+			}
+			
+			$currencyJs = "";
+				
+				
+			
+			if ($currencyPosition == "curr_symb_left") {
+				$currencyJs .= "BrainSINSRecommender.setCurrencySymbolPosition( BrainSINS.RecommenderConstants.leftPosition );" . PHP_EOL;
+			} else {
+				$currencyJs .= "BrainSINSRecommender.setCurrencySymbolPosition( BrainSINS.RecommenderConstants.rightPosition );" . PHP_EOL;
+			}
+			$currencyJs .= "BrainSINSRecommender.setCurrencyDelimiter( '$currencyDelimiter' );" . PHP_EOL;
+
+				
 			$langCode = Mage::app()->getStore()->getCode() . $currencyCode;
 				
 			if ($currencySymbol == "$") {
 				$currencyJs .= "BrainSINSRecommender.setCurrencySymbol( BrainSINS.RecommenderConstants.dollar );" . PHP_EOL;
-				$currencyJs .= "BrainSINSRecommender.setCurrencySymbolPosition( BrainSINS.RecommenderConstants.leftPosition );" . PHP_EOL;
-				$currencyJs .= "BrainSINSRecommender.setCurrencyDelimiter( '.' );" . PHP_EOL;
-			} else if ($currencySymbol == "�") {
+			} else if ($currencySymbol == "£") {
 				$currencyJs .= "BrainSINSRecommender.setCurrencySymbol( BrainSINS.RecommenderConstants.pound );" . PHP_EOL;
-				$currencyJs .= "BrainSINSRecommender.setCurrencySymbolPosition( BrainSINS.RecommenderConstants.leftPosition );" . PHP_EOL;
-				$currencyJs .= "BrainSINSRecommender.setCurrencyDelimiter( '.' );" . PHP_EOL;
-			} else if ($currencySymbol == "�") {
+			} else if ($currencySymbol == "€") {
 				//default behaviour
 			} else {
 				$currencyJs .= "BrainSINSRecommender.setCurrencySymbol('$currencySymbol');" . PHP_EOL;
-				$currencyJs .= "BrainSINSRecommender.setCurrencySymbolPosition( BrainSINS.RecommenderConstants.leftPosition );" . PHP_EOL;
-				$currencyJs .= "BrainSINSRecommender.setCurrencyDelimiter( '.' );" . PHP_EOL;
-			}
-				
+			}				
 				
 			if ($placeKey == 'brainsins/BS_HOME_RECOMMENDER') {
 				$paintCallback = "typeof bsPaintHomeRecommendations == 'undefined' ? null : bsPaintHomeRecommendations";
@@ -576,37 +622,37 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 			$script .= 'var bsHost = (("https:" == document.location.protocol) ? "https://" : "http://");' . PHP_EOL;
 			$script .= 'document.write(unescape("%3Cscript src=\'" + bsHost + "' . $recUrl . '/bsrecwidget.js\' type=\'text/javascript\'%3E%3C/script%3E"));' . PHP_EOL;
 			$script .= "</script>" . PHP_EOL;
-				
+
 			$useHighDetailScript = "";
-				
+
 			$useHighDetail = Mage::getStoreConfig('brainsins/BS_USE_HIGH_DETAIL');
 			if (isset($useHighDetail) && $useHighDetail == "1") {
 				$useHighDetailScript = 'BrainSINSRecommender.setDetailsLevel("high");' . PHP_EOL;
 			}
-				
+
 			$script .= '
-<script type="text/javascript">
-	try{
-	           BrainSINSTracker.setCustomAttribute("currencySymbol", "' . $currencySymbol . '");
-               var BrainSINSRecommender = BrainSINS.getRecommender( BrainSINSTracker );
-               ' . $filter . '
-               ' . $currencyJs . '
-               ' . $useHighDetailScript .'
-               BrainSINSRecommender.loadWidget("' . $recommenderId . '",' . $prodId . ',"' . $langCode . '","' . $divId . '",' . $userId . ',' . $paintCallback . ');
-	}catch(err) { }
-</script>
-';
+			<script type="text/javascript">
+			try{
+			BrainSINSTracker.setCustomAttribute("currencySymbol", "' . $currencySymbol . '");
+			var BrainSINSRecommender = BrainSINS.getRecommender( BrainSINSTracker );
+			' . $filter . '
+			' . $currencyJs . '
+			' . $useHighDetailScript .'
+			BrainSINSRecommender.loadWidget("' . $recommenderId . '",' . $prodId . ',"' . $langCode . '","' . $divId . '",' . $userId . ',' . $paintCallback . ');
+		}catch(err) { }
+		</script>
+		';
 		}
 
 		/*$script .= "<script type='text/javascript'>";
 		 $script .= "var BrainSINSRecommender = BrainSINS.getRecommender( BrainSINSTracker );";
 		$script .= "BrainSINSRecommender.loadCSS(2);";
 		$script .= 'new Ajax.Request("/mage170/recsins/index/getRecommendations", {';
-		$script .= 'method : "get",';
-		$script .= 'onSuccess : function(transport) {';
-		$script .= 'document.getElementById("home_recommendations").innerHTML = transport.responseText';
-		$script .= '}';
-		$script .= '})';
+				$script .= 'method : "get",';
+				$script .= 'onSuccess : function(transport) {';
+				$script .= 'document.getElementById("home_recommendations").innerHTML = transport.responseText';
+				$script .= '}';
+				$script .= '})';
 
 		$script .="</script>";*/
 

@@ -419,6 +419,71 @@ class Brainsins_Recsins_Block_Adminhtml_Recsins_Edit_Form extends Mage_Adminhtml
 			//$outOfStockCheckbox->setIsChecked(true);
 		}
 
+
+		// currency symbols, positions and delimiters
+		
+		$currencies = Mage::app()->getStore()->getAvailableCurrencyCodes(true);
+		$stores = Mage::app()->getStore()->getCollection();
+
+		$currencyOptions = array();
+		
+		$currenciesLabel = new Varien_Data_Form_Element_Label(array('value' => $helper->__("Currency Display Options"), 'bold' => 'true'));
+		
+		foreach($currencies as $currency) {
+			$currencyHeader = new Varien_Data_Form_Element_Label(array('value' => $helper->__($currency), 'bold' => 'false'));
+			$currencySymbolText = new Varien_Data_Form_Element_Text(array('name' => $currency.'_symb_text', "label" => $helper->__('Currency Symbol')));
+			
+			$radioLeft = new Varien_Data_Form_Element_Radio();
+			$radioLeft->setLabel($helper->__("Left"));
+			$radioLeft->setValue("curr_symb_left");
+			$radioLeft->setAdditional_text("");
+			
+			$radioRight = new Varien_Data_Form_Element_Radio();
+			$radioRight->setLabel($helper->__("Right"));
+			$radioRight->setValue("curr_symb_right");
+			$radioRight->setAdditional_text("");
+			
+			$currSymbPosOptions = array();
+			$currSymbPosOptions[] = $radioLeft;
+			$currSymbPosOptions[] = $radioRight;
+			$currSymbPos = new BS_Radios(array('name' => $currency.'_symb_pos_options', 'separator' => '<br>'));
+			$currSymbPos->setId($currency . "_symb_pos_options");
+			$currSymbPos->setValues($currSymbPosOptions);
+			
+			$currencyDelimiter = new Varien_Data_Form_Element_Text(array('name' => $currency .'_delim', "label" => $helper->__("Currency Delimiter")));
+			
+			$currencyOptions[$currency] = array();
+			$currencyOptions[$currency]['header'] = $currencyHeader;
+			$currencyOptions[$currency]['symbol'] = $currencySymbolText;
+			$currencyOptions[$currency]['position'] = $currSymbPos;
+			$currencyOptions[$currency]['delimiter'] = $currencyDelimiter;
+			
+			//selected option
+			
+			$selectedSymbol = Mage::getStoreConfig("brainsins/BS_". $currency . "_SYMBOL");
+			if (!isset($selectedSymbol) || !$selectedSymbol) {
+				$selectedSymbol = Mage::app()->getLocale()->currency($currency)->getSymbol();
+			}
+			$currencySymbolText->setValue($selectedSymbol);
+			
+			$selectedPosition = Mage::getStoreConfig("brainsins/BS_". $currency . "_POSITION");
+			if ((!isset($selectedPosition) || !$selectedPosition) || !($selectedPosition == "curr_symb_right" || $selectedPosition == "curr_symb_left")) {
+				$selectedPosition = "curr_symb_right";
+			}
+			$currSymbPos->setValue(array($selectedPosition));
+			
+			$selectedDelimiter = Mage::getStoreConfig("brainsins/BS_". $currency . "_DELIMITER");
+			if (!isset($selectedDelimiter) || !$selectedDelimiter) {
+				$selectedDelimiter = ",";
+			}
+			$currencyDelimiter->setValue($selectedDelimiter);
+		}
+		
+		
+		
+
+		//
+
 		$imagesLabel = new Varien_Data_Form_Element_Label(array('value' => $helper->__("Select Image url type"), 'bold' => 'true'));
 
 		$radioNotResize = new Varien_Data_Form_Element_Radio();
@@ -569,11 +634,21 @@ class Brainsins_Recsins_Block_Adminhtml_Recsins_Edit_Form extends Mage_Adminhtml
 			$useAjaxRequests->setIsChecked(false);
 		}
 		$useAjaxRequestsLabel = new Varien_Data_Form_Element_Label(array('value' => $helper->__("Use ajax for recommendation requests"), 'bold' => 'true'));
-		
+
 
 		//$advancedFieldSet->addElement($advancedRadios);
 		$advancedFieldSet->addElement($includeOutOfStockLabel);
 		$advancedFieldSet->addElement($outOfStockCheckbox);
+		
+		$advancedFieldSet->addElement($currenciesLabel);
+		foreach($currencyOptions as $currency => $options) {
+			$advancedFieldSet->addElement($options['header']);
+			$advancedFieldSet->addElement($options['symbol']);
+			$advancedFieldSet->addElement($options['position']);
+			$advancedFieldSet->addElement($options['delimiter']);
+		}
+		
+		
 		$advancedFieldSet->addElement($imagesLabel);
 		$advancedFieldSet->addElement($imageRadios);
 		$advancedFieldSet->addElement($widthText);

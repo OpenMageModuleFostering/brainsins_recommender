@@ -202,6 +202,24 @@ class Brainsins_Recsins_Adminhtml_RecsinsController extends Mage_Adminhtml_Contr
 					Mage::getSingleton("core/session", array("name" => "adminhtml"))->setData('brainsins_BS_SEND_OUT_OF_STOCK_PRODUCTS', "0");
 				}
 
+				$currencies = Mage::app()->getStore()->getAvailableCurrencyCodes(true);
+				foreach($currencies as $currency) {
+					if (array_key_exists($currency.'_symb_text', $data)) {
+						Mage::getModel('core/config')->saveConfig("brainsins/BS_". $currency . "_SYMBOL", $data[$currency.'_symb_text']);
+					}
+					
+					if (array_key_exists($currency . "_symb_pos_options", $data)) {
+						Mage::getModel('core/config')->saveConfig("brainsins/BS_". $currency . "_POSITION", $data[$currency.'_symb_pos_options']);
+					}
+					
+					if (array_key_exists($currency .'_delim', $data)) {
+						Mage::getModel('core/config')->saveConfig("brainsins/BS_". $currency . "_DELIMITER", $data[$currency .'_delim']);
+						
+					}
+					
+				}
+
+
 				if (array_key_exists("bsimageoptions", $data)) {
 					$resizeImages = $data['bsimageoptions'];
 					if (isset($resizeImages)) {
@@ -263,22 +281,22 @@ class Brainsins_Recsins_Adminhtml_RecsinsController extends Mage_Adminhtml_Contr
 						}
 					}
 				}
-				
+
 				if (array_key_exists("bs_script", $data)) {
 					$bsScript = $data['bs_script'];
 					if (isset($bsScript)) {
 						Mage::getModel('core/config')->saveConfig('brainsins/BS_SCRIPT_URL', $bsScript);
 					}
 				}
-				
+
 				if (array_key_exists("bs_script_https", $data)) {
 					$bsScriptHttps = $data['bs_script_https'];
 					if (isset($bsScriptHttps)) {
 						Mage::getModel('core/config')->saveConfig('brainsins/BS_SCRIPT_THTTPS_URL', $bsScriptHttps);
 					}
 				}
-				
-				if (array_key_exists("use_high_detail", $data)) {					
+
+				if (array_key_exists("use_high_detail", $data)) {
 					$useHighDetailValue = $data['use_high_detail'];
 					if (isset($useHighDetailValue) && $useHighDetailValue == "checked") {
 						Mage::getModel('core/config')->saveConfig('brainsins/BS_USE_HIGH_DETAIL', "1");
@@ -288,7 +306,7 @@ class Brainsins_Recsins_Adminhtml_RecsinsController extends Mage_Adminhtml_Contr
 				} else {
 					Mage::getModel('core/config')->saveConfig('brainsins/BS_USE_HIGH_DETAIL', "0");
 				}
-				
+
 				if (array_key_exists("use_ajax_requests", $data)) {
 					$useAjaxRequestsValue = $data['use_ajax_requests'];
 					if (isset($useAjaxRequestsValue) && $useAjaxRequestsValue == "checked") {
