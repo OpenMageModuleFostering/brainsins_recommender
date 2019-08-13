@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<config>
+	<api>
+		<resources>
+			<bsApi translate="title" module="brainsins_recsins">
+				<title>BrainSINS API Extension</title>
+				<model>Brainsins_Recsins_Model_Api_Api</model>
+				<methods>
+					<test translate="title" module="brainsins_recsins">
+						<title>Just a test call</title>
+						<method>test</method>
+						<acl>catalog/product</acl>
+					</test>
+					<storeList translate="title" module="brainsins_recsins">
+						<title>get all the stores</title>
+						<method>storeList</method>
+						<acl>catalog/product</acl>
+					</storeList>
+					<currencyList translate="title" module="brainsins_recsins">
+						<title>get all the currencies</title>
+						<method>currencyList</method>
+						<acl>catalog/product</acl>
+					</currencyList>
+					<productInfo translate="title" module="brainsins_recsins">
+						<title>get product info</title>
+						<method>productInfo</method>
+						<acl>catalog/product</acl>
+					</productInfo>
+					<productList translate="title" module="brainsins_recsins">
+						<title>get product list with basic info</title>
+						<method>productList</method>
+						<acl>catalog/product</acl>
+					</productList>
+					<productCount translate="title" module="brainsins_recsins">
+						<title>get number of products</title>
+						<method>productCount</method>
+						<acl>catalog/product</acl>
+					</productCount>
+					<productPage translate="title" module="brainsins_recsins">
+						<title>get a page of products</title>
+						<method>productPage</method>
+						<acl>catalog/product</acl>
+					</productPage>
+					<extensionOptions translate="title" module="brainsins_recsins">
+						<title>get brainsins selected options</title>
+						<method>getExtensionOptions</method>
+						<acl>catalog/product</acl>
+					</extensionOptions>
+					<userCount translate="title" module="brainsins_recsins">
+						<title>get number of users</title>
+						<method>userCount</method>
+						<acl>catalog/product</acl>
+					</userCount>
+					<userPage translate="title" module="brainsins_recsins">
+						<title>get a page of users</title>
+						<method>userPage</method>
+						<acl>catalog/product</acl>
+					</userPage>
+					<notifyVersion translate="title" module="brainsins_recsins">
+						<title>notify last version</title>
+						<method>notifyVersion</method>
+						<acl>catalog/product</acl>
+					</notifyVersion>
+				</methods>
+			</bsApi>
+		</resources>
+		<acl>
+			<resources>
+				<all>
+				</all>
+			</resources>
+		</acl>
+	</api>
+</config>

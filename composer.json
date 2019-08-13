@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Brainsins_Recommender",
+    "type": "magento-module",
+    "license": "GPL-3.0",
+    "homepage": "",
+    "description": "Brainsins Recommender for Magento",
+    "authors": [
+    {
+        "name": "BrainSINS",
+        "email": "alejandro.cuevas@brainsins.com"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}
