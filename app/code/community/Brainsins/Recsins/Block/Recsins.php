@@ -210,12 +210,15 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 
 		//end captured events
 
+		$btPage = "any";
+		
 		if ($page == 'cms') {
 			$pageId = Mage::getSingleton('cms/page')->getIdentifier();
 			$current_page = "cms->" . $pageId;
 			$url = Mage::helper('core/url')->getCurrentUrl();
 
 			if ($pageId == 'home') {
+				$btPage = "home";
 				$recScript = $this->getJSRecommendations('brainsins/BS_HOME_RECOMMENDER', 'home_recommendations', $userId, null);
 			}
 		} else if ($page == 'catalog') {
@@ -224,13 +227,14 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 			$category = Mage::registry('current_category');
 
 			if (isset($product) && $product) {
-
+				$btPage = "product";
 				$productId = $product->getId();
 				$store = Mage::app()->getStore();
 				$url = $product->getUrlModel()->getUrl($product, array('_ignore_category' => true)) . "?___store=" . Mage::app()->getStore()->getCode();
 
 				$recScript = $this->getJSRecommendations('brainsins/BS_PRODUCT_RECOMMENDER', 'product_recommendations', $userId, $productId);
 			} else if(isset($category) && $category) {
+				$btPage = "category";
 				$categoryId = $category->getId();
 				$recScript = $this->getJSRecommendations('brainsins/BS_CATEGORY_RECOMMENDER', 'category_recommendations', $userId, $categoryId);
 			} else {
@@ -240,19 +244,23 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 			$request = Mage::app()->getFrontController()->getRequest();
 
 			if ($request->getControllerName() == "cart") {
+				$btPage = "cart";
 				$recScript = $this->getJSRecommendations('brainsins/BS_CART_RECOMMENDER', 'cart_recommendations', $userId, null);
 			} else if ($request->getControllerName() == "onepage" || $request->getControllerName() == "multishipping") {
 				if ($request->getActionName() == "success") {
+					$btPage = "checkout";
 					$recScript = $this->getJSRecommendations('brainsins/BS_CHECKOUT_RECOMMENDER', 'checkout_recommendations', $userId, null);
 				}
 			}
 		}
+		
+		//Set up page type for behavioural targeting
+		$script .= 'BrainSINSTracker.setPageType("' . $btPage . '");' . PHP_EOL;
 
 		//track page url
 		$product = Mage::registry('current_product');
 		if (isset($product) && $product) {
-
-
+			
 			$pid = $product->getId();
 			$name = $product->getName();
 			$name = str_replace("\r\n", " ", $name);
