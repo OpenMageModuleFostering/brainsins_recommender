@@ -50,6 +50,38 @@ class Brainsins_Recsins_Model_Api_ProductsApi extends Mage_Catalog_Model_Product
 		$path = str_replace($baseDir . DS, "", $img->getBaseFile());
 		return $store->getBaseUrl('media') . str_replace(DS, '/', $path) ;
 	}
+	
+	protected function _getResizedImageUrl($product) {
+		
+		$width = 0;
+		$heigth = 0;
+		
+		$imageSelectedOption = Mage::getStoreConfig('brainsins/BS_IMAGE_RESIZE');
+		if (isset($imageSelectedOption) && $imageSelectedOption == 'image_resize') {
+		
+			$imageSelectedWidth = Mage::getStoreConfig('brainsins/BS_IMAGE_RESIZE_WIDTH');
+			$imageSelectedHeigth = Mage::getStoreConfig('brainsins/BS_IMAGE_RESIZE_HEIGTH');
+		
+			if (isset($imageSelectedWidth) && is_numeric($imageSelectedWidth) && $imageSelectedWidth > 0) {
+				$width = $imageSelectedWidth;		
+				if (isset($imageSelectedHeigth) && is_numeric($imageSelectedHeigth) && $imageSelectedHeigth > 0) {
+					$heigth = $imageSelectedHeigth;	
+				}
+			}
+		}
+		
+		$url = (string) Mage::helper('catalog/image')->init($product, "small_image");
+		
+		if (isset ($width) && is_numeric($width) && $width > 0) {
+			if (isset($heigth) && is_numeric($heigth) && $heigth > 0) {
+				$url = (string) Mage::helper('catalog/image')->init($product, "small_image")->resize($width, $heigth);
+			} else {
+				$url = (string) Mage::helper('catalog/image')->init($product, "small_image")->resize($width);
+			}
+		}
+		
+		return $url;
+	}
 
 	private function checkOption($option, $options) {
 		return array_key_exists($option, $options) && $options[$option] == "1";
@@ -121,6 +153,12 @@ class Brainsins_Recsins_Model_Api_ProductsApi extends Mage_Catalog_Model_Product
 			$result['bs_cached_image'] = $prodCachedImageUrl;
 			$result['bs_real_image'] = $prodImageUrl;
 			$result['bs_controller_image'] = $imageControllerUrl;
+			
+			
+		}
+		
+		if ($this->checkOption("getResizedImageUrls", $options)) {
+			$result['bs_resized_image'] = $this->_getResizedImageUrl($product);
 		}
 
 		if ($this->checkOption("getMinimalPrices", $options)) {

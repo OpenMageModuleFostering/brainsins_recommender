@@ -26,7 +26,7 @@
 <config>
     <modules>
         <Brainsins_Recsins>
-            <version>1.6.0</version>
+            <version>1.6.1</version>
         </Brainsins_Recsins>
     </modules>
     <frontend>
