@@ -490,7 +490,13 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 			} else {
 				$callUrl .= "/recsins/index/getRecommendations";
 			}
-				
+
+			if ($placeKey != 'brainsins/BS_CATEGORY_RECOMMENDER') {
+				$script .= 'var brainsins_filter_url = ""' . PHP_EOL;
+				$script.= 'if (typeof brainsins_filter != "undefined"){' . PHP_EOL;
+				$script .= 'brainsins_filter_url = "/categories/" + brainsins_filter + "/filter/all";';
+				$script .= '}' .PHP_EOL;
+			}
 				
 			$script .= 'new Ajax.Request("' . $callUrl;
 				
@@ -502,6 +508,10 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 				$script .= '/filter/all';
 			} elseif ($placeKey == 'brainsins/BS_PRODUCT_RECOMMENDER') {
 				$script .= '/prodId/' . $productId;
+			}
+			
+			if ($placeKey != 'brainsins/BS_CATEGORY_RECOMMENDER') {
+				$script .= '" + brainsins_filter_url + "';
 			}
 				
 			$script .= '/lang/' . $langCode;
@@ -617,6 +627,14 @@ class Brainsins_Recsins_Block_Recsins extends Mage_Core_Block_Abstract {
 				$filter .= 'BrainSINSRecommender.setFilter(BrainSINS.RecommenderConstants.all);';
 			}
 
+			if ($placeKey != 'brainsins/BS_CATEGORY_RECOMMENDER') {
+				$filter .= 'if (typeof brainsins_filter != "undefined"){' . PHP_EOL;
+				$filter .= 'BrainSINSRecommender.setFilterCategories( brainsins_filter );' . PHP_EOL;
+				$filter .= 'BrainSINSRecommender.setFilter(BrainSINS.RecommenderConstants.all);' . PHP_EOL;
+				$filter .= '}' . PHP_EOL;
+			}
+			
+			
 			$script .= '<script type="text/javascript">' . PHP_EOL;
 			$script .= 'var bsHost = (("https:" == document.location.protocol) ? "https://" : "http://");' . PHP_EOL;
 			$script .= 'document.write(unescape("%3Cscript src=\'" + bsHost + "' . $recUrl . '/bsrecwidget.js\' type=\'text/javascript\'%3E%3C/script%3E"));' . PHP_EOL;
